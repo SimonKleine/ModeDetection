@@ -5,10 +5,7 @@ import torch.optim as optim
 from torch.autograd import Variable
 import numpy as np
 
+list = [0, 1, 2]
 
-test = [1,2,3,4,5]
-k = [0, 1, 2]
-test1 = test[k]
-
-print(test)
-print(test1)
+for a in enumerate(list):
+    print(a)

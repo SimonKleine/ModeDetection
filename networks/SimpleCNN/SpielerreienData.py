@@ -18,4 +18,4 @@ for data_shred in dataset.get_user_data("a526f3566e9c9024dfa7378eb4291d787a09fd3
     print(start_datetime)
     #print(end_datetime)
 '''
-print(dataset.get_user_data_windows("a526f3566e9c9024dfa7378eb4291d787a09fd37"))
+print(dataset.get_user_data("a526f3566e9c9024dfa7378eb4291d787a09fd37"))
