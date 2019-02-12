@@ -38,7 +38,7 @@ class targetlabel_to_number(object):
     # targetmatrix (for example [0, 0, 1, 0, 0, 0, 0])corresponding to the windows in that set.
     def getTargetMatrix(self, AccelerometerDataset):
         target_List = targetlabel_to_number.targetlabel_to_number(self,
-            AccelerometerDataset)
+                          AccelerometerDataset)
         targetMatrix = []
         possible_Targetnumbers = [0, 1, 2, 3, 4, 5, 6]
 
@@ -52,3 +52,9 @@ class targetlabel_to_number(object):
             targetMatrix.append(list)
 
         return targetMatrix
+
+
+    def getTargetMatrix1d(self, AccelerometerDataset):
+        targetMatrix1d = targetlabel_to_number.targetlabel_to_number(self,
+                           AccelerometerDataset).long()
+        return targetMatrix1d
