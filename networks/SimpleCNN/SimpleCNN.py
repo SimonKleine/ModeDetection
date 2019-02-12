@@ -3,7 +3,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-
+from torch.autograd import Variable
 import accelerometerfeatures.utils.pytorch.dataset as dataset
 
 import targetlabel_to_number
@@ -21,7 +21,9 @@ class Network (nn.Module):
 
     def forward(self, x):
         x = self.firstLayer(x)
+        #print(x.shape)
         x = self.secondLayer(x)
+        #print(x.shape)
 
         return x
 
@@ -35,7 +37,9 @@ train_windows = data.get_dataset_for_users(
 train_windows_no_label = torch.Tensor(
     [window[0] for window in train_windows])
 targetlabel_to_number = targetlabel_to_number.targetlabel_to_number()
-target_matrix = torch.Tensor(targetlabel_to_number.getTargetMatrix(train_windows))
+target_matrix = torch.Tensor(
+    targetlabel_to_number.getTargetMatrix(train_windows))
+target_matrix = target_matrix.long()
 
 cnn = Network()
 optimizer = optim.Adam(cnn.parameters(), lr=0.1)
@@ -44,7 +48,15 @@ loss_func = nn.CrossEntropyLoss()
 for epoch in range(EPOCH):
     for step, input in enumerate(train_windows_no_label):
        output = cnn(input.unsqueeze(0))
-       loss = loss_func(output, target_matrix[step])
+       #print(output)
+       #print(output[0]
+       #)
+       #print(target_matrix[step].unsqueeze(0).unsqueeze(0).long())
+       #print(target_matrix[step].unsqueeze(0).long()[0])
+       #print(output.shape)
+       #print(target_matrix[step].unsqueeze(0).shape)
+       loss = loss_func(output,
+                        target_matrix[step].unsqueeze(0))
        optimizer.zero_grad()
        loss.backward()
        optimizer.step()
