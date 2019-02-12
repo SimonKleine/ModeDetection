@@ -35,7 +35,7 @@ class targetlabel_to_number(object):
         return current_label_number
 
     # This method takes in an AccelerometerDataset and returns a
-    # targetmatrix corresponding to the windows in that set.
+    # targetmatrix (for example [0, 0, 1, 0, 0, 0, 0])corresponding to the windows in that set.
     def getTargetMatrix(self, AccelerometerDataset):
         target_List = targetlabel_to_number.targetlabel_to_number(self,
             AccelerometerDataset)
