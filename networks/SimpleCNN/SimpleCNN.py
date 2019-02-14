@@ -6,6 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 import accelerometerfeatures.utils.pytorch.dataset as dataset
 import numpy as np
+from argparse import ArgumentParser
 
 import targetlabel_to_number
 
@@ -27,7 +28,7 @@ class Network (nn.Module):
         #print(x.shape)
 
         return x
-
+        print(np.argmax(output))
 
 def accuracy(cnn, users_valid):
     train_windows = data.get_dataset_for_users(users_valid)
@@ -36,26 +37,36 @@ def accuracy(cnn, users_valid):
     target_matrix1d = targetlabel_to_number.getTargetMatrix1d(
         train_windows)
     output_list = []
+    output_list1 = []
+    print(target_matrix1d)
     for step, input in enumerate(train_windows_no_label):
         output = cnn(input.unsqueeze(0))
+        print(input)
+        print(output)
         output = output.detach()
-        print(np.argmax(output))
+        print(output)
+        output_list1.append(output)
         output_list.append(np.argmax(output))
     print(output_list)
+    output_list = torch.Tensor(output_list).long()
     same = sum(output_list == target_matrix1d)
     not_same = sum(output_list != target_matrix1d)
+    print(same)
+    print(not_same)
     acc = same / (same + not_same) * 100
 
     return acc
 
 
-data = dataset.AccelerometerDatasetLoader(
-    "/home/simonk/Documents/Bachelorarbeit"
-    "/data/accelerometer_data/1st_study.csv",
-    perform_interpolation=True)
+argparser = ArgumentParser()
+argparser.add_argument('training_data_file_path')
+args = argparser.parse_args()
+print(args)
+data = dataset.AccelerometerDatasetLoader(args.training_data_file_path,
+                                          perform_interpolation=True)
 users = data.users
 users_train = users[0:len(users)-2]
-users_valid = users[len(users)-1: len(users)]
+users_valid = users[len(users)-2: len(users)]
 
 
 train_windows = data.get_dataset_for_users(users_train)
@@ -79,4 +90,4 @@ for epoch in range(EPOCH):
        optimizer.step()
 
 torch.save(cnn, "cnn.pt")
-print(accuracy(cnn, users_valid))
+print("accuracy= ", accuracy(cnn, users_valid))
