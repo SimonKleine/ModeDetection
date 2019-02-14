@@ -37,22 +37,17 @@ def accuracy(cnn, users_valid):
     target_matrix1d = targetlabel_to_number.getTargetMatrix1d(
         train_windows)
     output_list = []
-    output_list1 = []
     print(target_matrix1d)
     for step, input in enumerate(train_windows_no_label):
         output = cnn(input.unsqueeze(0))
         print(input)
-        print(output)
         output = output.detach()
         print(output)
-        output_list1.append(output)
         output_list.append(np.argmax(output))
-    print(output_list)
-    output_list = torch.Tensor(output_list).long()
+    output_list = np.array(output_list)
+    target_matrix1d = np.array(target_matrix1d)
     same = sum(output_list == target_matrix1d)
     not_same = sum(output_list != target_matrix1d)
-    print(same)
-    print(not_same)
     acc = same / (same + not_same) * 100
 
     return acc
