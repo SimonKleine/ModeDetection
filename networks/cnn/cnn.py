@@ -16,7 +16,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
     # windowsize in DataLoader
     # paper doesn't specify which kind of pooling is used
     def __init__(self):
-        super(ConvoloutinalNeuralNetwork.self).__init__()
+        super(ConvolutionalNeuralNetwork.self).__init__()
         self.firstlayer = nn.Sequential(nn.Conv1d(18, 1, 7),
                                         nn.nn.MaxPool1d(kernel_size=2))
         self.secondlayer = nn.Sequential(nn.Conv1d(18, 1, 7),
@@ -29,8 +29,25 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.thirdlayer(x)
         return x
 
+def accuracy(cnn, target_matrix_1d, train_windows_no_label):
+    print("Calculating accuracy..")
+    output_list = []
+    for step, input in enumerate(train_windows_no_label):
+        output = cnn(input.unsqueeze(0))
+        output = output.detach()
+        output_list.append(np.argmax(output))
+    output_list = np.array(output_list)
+    target_matrix_1d = np.array(target_matrix_1d)
+    same = sum(output_list == target_matrix_1d)
+    not_same = sum(output_list != target_matrix_1d)
+    acc = same / (same + not_same) * 100
+
+    return acc
+
 
 if __name__ == '__main__':
+    EPOCH = 1
+    overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
     args = argparser.parse_args()
@@ -38,3 +55,57 @@ if __name__ == '__main__':
     print("Loading Dataset...")
     data = dataset.AccelerometerDatasetLoader(
         args.training_data_file_path, perform_interpolation=True)
+
+    users = data.users
+    logfile = open("logfilecnn.txt", "x")
+    for current_user in users:
+        users_train = users
+        users_train.remove(current_user)
+        users_valid = current_user
+        print("User ", (overall_accuracy_list.size() + 1),
+              " von ", users_train.size())
+
+        print("Creating training windows..")
+        train_windows = data.get_dataset_for_users(users_train)
+        valid_windows = data.get_dataset_for_users(users_valid)
+        train_windows_no_label = torch.Tensor(
+            [window[0] for window in train_windows])
+        valid_windows_no_label = torch.Tensor(
+            [window[0] for window in valid_windows])
+        target_matrix_1d = \
+            simplecnn.target_label_to_number.get_target_matrix_1d(
+            train_windows)
+        valid_target_matrix_1d = \
+            simplecnn.target_label_to_number.get_target_matrix_1d(
+                valid_windows)
+        cnn = ConvolutionalNeuralNetwork()
+        # if os.path.isfile("cnn.pt"):
+        #    cnn = torch.load("cnn.pt")
+        optimizer = optim.Adam(cnn.parameters(), lr=0.01)
+        loss_func = nn.CrossEntropyLoss()
+
+        for epoch in range(EPOCH):
+            print("Training in progress(Epoch:", epoch, ")..")
+            for step, input in enumerate(train_windows_no_label):
+                input = input.cuda()
+                target_matrix_1d = target_matrix_1d.cuda()
+                output = cnn(input.unsqueeze(0))
+                loss = loss_func(output[0],
+                                 target_matrix_1d[step].unsqueeze(0))
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+        file_name_network = "cnn."
+        file_name_network = file_name_network.__add__(current_user)
+        file_name_network = file_name_network.__add__(".pt")
+        torch.save(cnn, file_name_network)
+        accuracy = accuracy(cnn, valid_target_matrix_1d,
+                            valid_windows_no_label)
+        string_for_logfile = "User: "
+        string_for_logfile = string_for_logfile.__add__(current_user,
+                                ", Accuracy: ", accuracy)
+
+        logfile.write(string_for_logfile)
+        overall_accuracy_list = overall_accuracy_list.append(accuracy)
+    overall_accuracy = sum(overall_accuracy_list) / overall_accuracy_list.size
+    logfile.write("Average Accuracy: ", overall_accuracy)
