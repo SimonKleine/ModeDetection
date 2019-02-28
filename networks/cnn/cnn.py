@@ -7,7 +7,7 @@ import torch.optim as optim
 import accelerometerfeatures.utils.pytorch.dataset as dataset
 import numpy as np
 from argparse import ArgumentParser
-import ModeDetection.networks.simplecnn as simplecnn
+import networks.simplecnn as simplecnn
 
 
 class ConvolutionalNeuralNetwork (nn.Module):
