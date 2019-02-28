@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='ModeDetection',
     version='0.1',
-    packages=[
+    packages=['ModeDetection'
 
     ],
     url='',
