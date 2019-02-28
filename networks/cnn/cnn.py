@@ -7,7 +7,8 @@ import torch.optim as optim
 import accelerometerfeatures.utils.pytorch.dataset as dataset
 import numpy as np
 from argparse import ArgumentParser
-import networks.simplecnn as simplecnn
+#import networks.simplecnn as simplecnn
+import target_label_to_number
 
 
 class ConvolutionalNeuralNetwork (nn.Module):
@@ -73,10 +74,10 @@ if __name__ == '__main__':
         valid_windows_no_label = torch.Tensor(
             [window[0] for window in valid_windows])
         target_matrix_1d = \
-            simplecnn.target_label_to_number.get_target_matrix_1d(
+            target_label_to_number.get_target_matrix_1d(
             train_windows)
         valid_target_matrix_1d = \
-            simplecnn.target_label_to_number.get_target_matrix_1d(
+            target_label_to_number.get_target_matrix_1d(
                 valid_windows)
         cnn = ConvolutionalNeuralNetwork()
         # if os.path.isfile("cnn.pt"):
