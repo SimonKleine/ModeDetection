@@ -63,8 +63,8 @@ if __name__ == '__main__':
         users_train = users
         users_train.remove(current_user)
         users_valid = current_user
-        print("User ", (overall_accuracy_list.size() + 1),
-              " von ", users_train.size())
+        print("User ", (len(overall_accuracy_list) + 1),
+              " von ", len(users_train))
 
         print("Creating training windows..")
         train_windows = data.get_dataset_for_users(users_train)
