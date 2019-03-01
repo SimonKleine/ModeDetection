@@ -19,9 +19,9 @@ class ConvolutionalNeuralNetwork (nn.Module):
     def __init__(self):
         super(ConvolutionalNeuralNetwork, self).__init__()
         self.firstlayer = nn.Sequential(nn.Conv1d(18, 1, 7),
-                                        nn.nn.MaxPool1d(kernel_size=2))
+                                        nn.MaxPool1d(kernel_size=2))
         self.secondlayer = nn.Sequential(nn.Conv1d(18, 1, 7),
-                                        nn.nn.MaxPool1d(kernel_size=2))
+                                        nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(114, 7)
 
     def forward(self, x):
