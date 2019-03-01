@@ -27,6 +27,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
     def forward(self, x):
         x = self.firstlayer(x)
         x = self.secondlayer(x)
+        print(x.shape)
         x = self.thirdlayer(x)
         return x
 
