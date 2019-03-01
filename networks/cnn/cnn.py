@@ -18,9 +18,9 @@ class ConvolutionalNeuralNetwork (nn.Module):
     # paper doesn't specify which kind of pooling is used
     def __init__(self):
         super(ConvolutionalNeuralNetwork, self).__init__()
-        self.firstlayer = nn.Sequential(nn.Conv1d(18, 1, 7),
+        self.firstlayer = nn.Sequential(nn.Conv1d(3, 18, 7),
                                         nn.MaxPool1d(kernel_size=2))
-        self.secondlayer = nn.Sequential(nn.Conv1d(18, 1, 7),
+        self.secondlayer = nn.Sequential(nn.Conv1d(54, 18, 7),
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(114, 7)
 
