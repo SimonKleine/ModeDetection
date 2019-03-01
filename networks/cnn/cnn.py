@@ -17,7 +17,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
     # windowsize in DataLoader
     # paper doesn't specify which kind of pooling is used
     def __init__(self):
-        super(ConvolutionalNeuralNetwork.self).__init__()
+        super(ConvolutionalNeuralNetwork, self).__init__()
         self.firstlayer = nn.Sequential(nn.Conv1d(18, 1, 7),
                                         nn.nn.MaxPool1d(kernel_size=2))
         self.secondlayer = nn.Sequential(nn.Conv1d(18, 1, 7),
