@@ -22,7 +22,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.secondlayer = nn.Sequential(nn.Conv1d(18, 18, 7),
                                         nn.MaxPool1d(kernel_size=2))
-        self.thirdlayer = nn.Linear(114, 7)
+        self.thirdlayer = nn.Linear(115, 7)
 
     def forward(self, x):
         x = self.firstlayer(x)
@@ -111,4 +111,4 @@ if __name__ == '__main__':
         overall_accuracy_list = overall_accuracy_list.append(accuracy)
     overall_accuracy = sum(overall_accuracy_list) / overall_accuracy_list.size
     logfile.write("Average Accuracy: ", overall_accuracy)
-    
+
