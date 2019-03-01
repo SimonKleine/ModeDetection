@@ -82,6 +82,7 @@ if __name__ == '__main__':
         cnn = ConvolutionalNeuralNetwork()
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
+        cnn.cuda()
         optimizer = optim.Adam(cnn.parameters(), lr=0.01)
         loss_func = nn.CrossEntropyLoss()
 
