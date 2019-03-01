@@ -20,7 +20,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         super(ConvolutionalNeuralNetwork, self).__init__()
         self.firstlayer = nn.Sequential(nn.Conv1d(3, 18, 7),
                                         nn.MaxPool1d(kernel_size=2))
-        self.secondlayer = nn.Sequential(nn.Conv1d(54, 18, 7),
+        self.secondlayer = nn.Sequential(nn.Conv1d(18, 18, 7),
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(114, 7)
 
@@ -87,7 +87,7 @@ if __name__ == '__main__':
         loss_func = nn.CrossEntropyLoss()
 
         for epoch in range(EPOCH):
-            print("Training in progress(Epoch:", epoch, ")..")
+            print("Training in progress(Epoch:", epoch, "/", EPOCH, ")..")
             for step, input in enumerate(train_windows_no_label):
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
@@ -111,3 +111,4 @@ if __name__ == '__main__':
         overall_accuracy_list = overall_accuracy_list.append(accuracy)
     overall_accuracy = sum(overall_accuracy_list) / overall_accuracy_list.size
     logfile.write("Average Accuracy: ", overall_accuracy)
+    
