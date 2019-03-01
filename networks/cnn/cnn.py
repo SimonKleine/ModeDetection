@@ -22,7 +22,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.secondlayer = nn.Sequential(nn.Conv1d(18, 18, 7),
                                         nn.MaxPool1d(kernel_size=2))
-        self.thirdlayer = nn.Linear(2070, 7)
+        self.thirdlayer = nn.Linear(115, 7)
 
     def forward(self, x):
         x = self.firstlayer(x)
@@ -93,6 +93,8 @@ if __name__ == '__main__':
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
                 output = cnn(input.unsqueeze(0))
+                print(output[0])
+                print(target_matrix_1d[step].unsqueeze(0))
                 loss = loss_func(output[0],
                                  target_matrix_1d[step].unsqueeze(0))
                 optimizer.zero_grad()
