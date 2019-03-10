@@ -18,17 +18,32 @@ class ConvolutionalNeuralNetwork (nn.Module):
     # paper doesn't specify which kind of pooling is used
     def __init__(self):
         super(ConvolutionalNeuralNetwork, self).__init__()
+        '''
         self.firstlayer = nn.Sequential(nn.Conv1d(3, 18, 7),
                                         nn.MaxPool1d(kernel_size=2))
         self.secondlayer = nn.Sequential(nn.Conv1d(18, 324, 7),
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
+        '''
+        self.firtconvolutionlayer = nn.Conv1d(3, 18, 7)
+        self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
+        self.secondconvolutionlayer = nn.Conv1d(18, 324, 7)
+        self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
+        self.firstlinearlayer = nn.Linear(115 * 18 * 18, 7)
 
     def forward(self, x):
+        '''
         x = self.firstlayer(x)
         x = self.secondlayer(x)
         print(x.shape)
         x = self.thirdlayer(x)
+        return x
+        '''
+        x = self.firtconvolutionlayer(x)
+        x = self.firstpoolinglayer(x)
+        x = self.secondconvolutionlayer(x)
+        x = self.secondpoolinglayer(x)
+        x = self.firstlinearlayer(x)
         return x
 
 def accuracy(cnn, target_matrix_1d, train_windows_no_label):
