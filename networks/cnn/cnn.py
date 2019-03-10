@@ -22,7 +22,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.secondlayer = nn.Sequential(nn.Conv1d(18, 18, 7),
                                         nn.MaxPool1d(kernel_size=2))
-        self.thirdlayer = nn.Linear(115, 7)
+        self.thirdlayer = nn.Linear(37260, 7)
 
     def forward(self, x):
         x = self.firstlayer(x)
