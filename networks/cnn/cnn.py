@@ -46,7 +46,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.secondconvolutionlayer(x)
         x = self.secondpoolinglayer(x)
         print("reached3")
-        x.view(1, 37260)
+        x.view(-1, 37260)
         print(x.size())
         x = self.firstlinearlayer(x)
         print("reached4")
