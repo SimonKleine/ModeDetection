@@ -29,7 +29,9 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 7)
         self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
+        print("reached")
         self.firstlinearlayer = nn.Linear(115 * 18 * 18, 7)
+        print("reached2")
 
     def forward(self, x):
         '''
@@ -39,13 +41,14 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.thirdlayer(x)
         return x
         '''
-        x.view(x.size(0), -1)
         x = self.firtconvolutionlayer(x)
         x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
         x = self.secondpoolinglayer(x)
-        print(x.size())
+        print("reached3")
+        x.view(x.size(0), -1)
         x = self.firstlinearlayer(x)
+        print("reached4")
         return x
 
 def accuracy(cnn, target_matrix_1d, train_windows_no_label):
