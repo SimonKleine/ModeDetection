@@ -39,6 +39,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.thirdlayer(x)
         return x
         '''
+        x.view(x.size(0), -1)
         x = self.firtconvolutionlayer(x)
         x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
