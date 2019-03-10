@@ -20,7 +20,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         super(ConvolutionalNeuralNetwork, self).__init__()
         self.firstlayer = nn.Sequential(nn.Conv1d(3, 18, 7),
                                         nn.MaxPool1d(kernel_size=2))
-        self.secondlayer = nn.Sequential(nn.Conv1d(18, 18, 7),
+        self.secondlayer = nn.Sequential(nn.Conv1d(18, 324, 7),
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
 
