@@ -84,6 +84,8 @@ if __name__ == '__main__':
         users_train = users
         users_train.remove(current_user)
         users_valid = current_user
+        print("user_valid= ", users_valid)
+        print("current_user= ", current_user)
         print("User ", (len(overall_accuracy_list) + 1),
               " von ", len(users_train))
 
