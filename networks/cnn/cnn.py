@@ -53,7 +53,7 @@ def accuracy(cnn, target_matrix_1d, train_windows_no_label):
     for step, input in enumerate(train_windows_no_label):
         output = cnn(input.unsqueeze(0))
         output = output.detach()
-        output_list.append(np.argmax(output))
+        output_list = output_list.append(np.argmax(output))
     output_list = np.array(output_list)
     target_matrix_1d = np.array(target_matrix_1d)
     print(output_list)
@@ -124,6 +124,7 @@ if __name__ == '__main__':
         file_name_network = file_name_network.__add__(".pt")
         torch.save(cnn, file_name_network)
         print("So oft wurde Schleife aufgerufen: ", i)
+        print(valid_target_matrix_1d)
         accuracy = accuracy(cnn, valid_target_matrix_1d,
                             valid_windows_no_label)
         string_for_logfile = "User: "
