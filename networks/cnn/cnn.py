@@ -127,6 +127,7 @@ if __name__ == '__main__':
         torch.save(cnn, file_name_network)
         print("So oft wurde Schleife aufgerufen: ", i)
         print(valid_target_matrix_1d)
+        print(target_matrix_1d)
         accuracy = accuracy(cnn, valid_target_matrix_1d,
                             valid_windows_no_label)
         string_for_logfile = "User: "
