@@ -51,6 +51,7 @@ def accuracy(cnn, target_matrix_1d, train_windows_no_label):
     print("Calculating accuracy..")
     output_list = []
     for step, input in enumerate(train_windows_no_label):
+        input = input.cuda()
         output = cnn(input.unsqueeze(0))
         output = output.detach()
         output_list = output_list.append(np.argmax(output))
