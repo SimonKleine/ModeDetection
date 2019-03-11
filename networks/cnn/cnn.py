@@ -102,6 +102,8 @@ if __name__ == '__main__':
         valid_target_matrix_1d = \
             target_label_to_number.get_target_matrix_1d(
                 valid_windows)
+        print(valid_target_matrix_1d)
+        print(target_matrix_1d)
         cnn = ConvolutionalNeuralNetwork()
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
