@@ -57,12 +57,8 @@ def accuracy(cnn, target_matrix_1d, train_windows_no_label):
         output_list = output_list.append(np.argmax(output))
     output_list = np.array(output_list)
     target_matrix_1d = np.array(target_matrix_1d)
-    print(output_list)
-    print(target_matrix_1d)
     same = sum(output_list == target_matrix_1d)
     not_same = sum(output_list != target_matrix_1d)
-    print(same)
-    print(not_same)
     acc = same / (same + not_same) * 100
 
     return acc
@@ -85,9 +81,6 @@ if __name__ == '__main__':
         users_train = users
         users_train.remove(current_user)
         users_valid = [current_user]
-        print("user_valid= ", users_valid)
-        print("current_user= ", current_user)
-        print(users_train)
         print("User ", (len(overall_accuracy_list) + 1),
               " von ", len(users_train))
 
@@ -104,19 +97,15 @@ if __name__ == '__main__':
         valid_target_matrix_1d = \
             target_label_to_number.get_target_matrix_1d(
                 valid_windows)
-        print(valid_target_matrix_1d)
-        print(target_matrix_1d)
         cnn = ConvolutionalNeuralNetwork()
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
         cnn.cuda()
         optimizer = optim.Adam(cnn.parameters(), lr=0.1)
         loss_func = nn.CrossEntropyLoss()
-        i = 0
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch, "/", EPOCH, ")..")
             for step, input in enumerate(train_windows_no_label):
-                i = i +1
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
                 output = cnn(input.unsqueeze(0))
@@ -129,9 +118,6 @@ if __name__ == '__main__':
         file_name_network = file_name_network.__add__(current_user)
         file_name_network = file_name_network.__add__(".pt")
         torch.save(cnn, file_name_network)
-        print("So oft wurde Schleife aufgerufen: ", i)
-        print(valid_target_matrix_1d)
-        print(target_matrix_1d)
         if len(valid_target_matrix_1d) == 0:
             continue
         accuracy = accuracy(cnn, valid_target_matrix_1d,
