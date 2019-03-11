@@ -54,6 +54,7 @@ def accuracy(cnn, target_matrix_1d, train_windows_no_label):
         input = input.cuda()
         output = cnn(input.unsqueeze(0))
         output = output.detach()
+        output = output.cpu()
         output_list = output_list.append(np.argmax(output))
     output_list = np.array(output_list)
     target_matrix_1d = np.array(target_matrix_1d)
