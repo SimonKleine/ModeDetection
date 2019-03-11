@@ -86,12 +86,13 @@ if __name__ == '__main__':
         users_valid = current_user
         print("user_valid= ", users_valid)
         print("current_user= ", current_user)
+        print(users_train)
         print("User ", (len(overall_accuracy_list) + 1),
               " von ", len(users_train))
 
         print("Creating training windows..")
         train_windows = data.get_dataset_for_users(users_train)
-        valid_windows = data.get_dataset_for_users([users_valid])
+        valid_windows = data.get_dataset_for_users(users_valid)
         train_windows_no_label = torch.Tensor(
             [window[0] for window in train_windows])
         valid_windows_no_label = torch.Tensor(
