@@ -131,6 +131,8 @@ if __name__ == '__main__':
         print("So oft wurde Schleife aufgerufen: ", i)
         print(valid_target_matrix_1d)
         print(target_matrix_1d)
+        if len(valid_target_matrix_1d) == 0:
+            continue
         accuracy = accuracy(cnn, valid_target_matrix_1d,
                             valid_windows_no_label)
         string_for_logfile = "User: "
