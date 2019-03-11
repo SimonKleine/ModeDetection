@@ -58,6 +58,8 @@ def accuracy(cnn, target_matrix_1d, train_windows_no_label):
     target_matrix_1d = np.array(target_matrix_1d)
     same = sum(output_list == target_matrix_1d)
     not_same = sum(output_list != target_matrix_1d)
+    print(same)
+    print(not_same)
     acc = same / (same + not_same) * 100
 
     return acc
@@ -102,15 +104,14 @@ if __name__ == '__main__':
         cnn.cuda()
         optimizer = optim.Adam(cnn.parameters(), lr=0.01)
         loss_func = nn.CrossEntropyLoss()
-
+        i = 0
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch, "/", EPOCH, ")..")
             for step, input in enumerate(train_windows_no_label):
+                i = i +1
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
                 output = cnn(input.unsqueeze(0))
-                print(target_matrix_1d[step].unsqueeze(0))
-                print(output[0].unsqueeze(0))
                 loss = loss_func(output[0].unsqueeze(0),
                                  target_matrix_1d[step].unsqueeze(0))
                 optimizer.zero_grad()
@@ -120,6 +121,7 @@ if __name__ == '__main__':
         file_name_network = file_name_network.__add__(current_user)
         file_name_network = file_name_network.__add__(".pt")
         torch.save(cnn, file_name_network)
+        print("So oft wurde Schleife aufgerufen: ", i)
         accuracy = accuracy(cnn, valid_target_matrix_1d,
                             valid_windows_no_label)
         string_for_logfile = "User: "
