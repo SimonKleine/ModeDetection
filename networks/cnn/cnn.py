@@ -83,7 +83,7 @@ if __name__ == '__main__':
     for current_user in users:
         users_train = users
         users_train.remove(current_user)
-        users_valid = current_user
+        users_valid = [current_user]
         print("user_valid= ", users_valid)
         print("current_user= ", current_user)
         print(users_train)
