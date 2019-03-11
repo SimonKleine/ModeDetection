@@ -109,7 +109,7 @@ if __name__ == '__main__':
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
                 output = cnn(input.unsqueeze(0))
-                print(target_matrix_1d[step])
+                print(target_matrix_1d[step].unsqueeze(0))
                 print(output[0])
                 loss = loss_func(output[0],
                                  target_matrix_1d[step].unsqueeze(0))
