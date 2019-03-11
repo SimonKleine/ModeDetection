@@ -56,6 +56,8 @@ def accuracy(cnn, target_matrix_1d, train_windows_no_label):
         output_list.append(np.argmax(output))
     output_list = np.array(output_list)
     target_matrix_1d = np.array(target_matrix_1d)
+    print(output_list)
+    print(target_matrix_1d)
     same = sum(output_list == target_matrix_1d)
     not_same = sum(output_list != target_matrix_1d)
     print(same)
@@ -102,7 +104,7 @@ if __name__ == '__main__':
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
         cnn.cuda()
-        optimizer = optim.Adam(cnn.parameters(), lr=0.01)
+        optimizer = optim.Adam(cnn.parameters(), lr=0.1)
         loss_func = nn.CrossEntropyLoss()
         i = 0
         for epoch in range(EPOCH):
