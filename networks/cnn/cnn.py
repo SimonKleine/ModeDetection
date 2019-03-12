@@ -123,7 +123,6 @@ if __name__ == '__main__':
             continue
         if len(valid_windows_no_label) == 0:
             continue
-        print(valid_windows_no_label)
         accuracy = get_accuracy(cnn, valid_target_matrix_1d,
                             valid_windows_no_label)
         string_for_logfile = "User: "
