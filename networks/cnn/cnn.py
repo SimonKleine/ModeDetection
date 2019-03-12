@@ -82,9 +82,6 @@ if __name__ == '__main__':
         users_train = users.copy()
         users_train.remove(current_user)
         users_valid = [current_user]
-        print(users)
-        print(users_train)
-        print(current_user)
         print("User ", (len(overall_accuracy_list) + 1),
               " von ", len(users_train))
 
@@ -123,6 +120,8 @@ if __name__ == '__main__':
         file_name_network = file_name_network.__add__(".pt")
         torch.save(cnn, file_name_network)
         if len(valid_target_matrix_1d) == 0:
+            continue
+        if len(valid_windows_no_label) == 0:
             continue
         accuracy = accuracy(cnn, valid_target_matrix_1d,
                             valid_windows_no_label)
