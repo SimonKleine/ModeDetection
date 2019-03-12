@@ -43,7 +43,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
         x = self.secondpoolinglayer(x)
-        x = x.view(1, 37260)
+        x = x.view(1, 36936)
         x = self.firstlinearlayer(x)
         return x
 
