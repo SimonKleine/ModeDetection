@@ -126,8 +126,8 @@ if __name__ == '__main__':
         string_for_logfile = "User: "
         string_for_logfile = string_for_logfile.__add__(current_user)
         string_for_logfile = string_for_logfile.__add__(", Accuracy: ")
-        string_for_logfile = string_for_logfile.__add__(accuracy)
-                                
+        string_for_logfile = string_for_logfile.__add__(str(accuracy))
+
 
         logfile.write(string_for_logfile)
         overall_accuracy_list = overall_accuracy_list.append(accuracy)
