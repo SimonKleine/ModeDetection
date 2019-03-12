@@ -25,11 +25,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
         '''
-        self.firtconvolutionlayer = nn.Conv1d(3, 18, 7)
+        self.firtconvolutionlayer = nn.Conv1d(3, 18, 9)
         self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.secondconvolutionlayer = nn.Conv1d(18, 324, 7)
+        self.secondconvolutionlayer = nn.Conv1d(18, 324, 9)
         self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.firstlinearlayer = nn.Linear(115 * 18 * 18, 7)
+        self.firstlinearlayer = nn.Linear(114 * 18 * 18, 7)
 
     def forward(self, x):
         '''
@@ -129,6 +129,7 @@ if __name__ == '__main__':
         string_for_logfile = string_for_logfile.__add__(current_user)
         string_for_logfile = string_for_logfile.__add__(", Accuracy: ")
         string_for_logfile = string_for_logfile.__add__(str(accuracy))
+        string_for_logfile = string_for_logfile.__add__("\n")
 
 
         logfile.write(string_for_logfile)
