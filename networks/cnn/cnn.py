@@ -105,7 +105,7 @@ if __name__ == '__main__':
         optimizer = optim.Adam(cnn.parameters(), lr=0.1)
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
-            print("Training in progress(Epoch:", epoch, "/", EPOCH, ")..")
+            print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
             for step, input in enumerate(train_windows_no_label):
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
@@ -134,5 +134,7 @@ if __name__ == '__main__':
         logfile.write(string_for_logfile)
         overall_accuracy_list.append(accuracy)
     overall_accuracy = sum(overall_accuracy_list) / len(overall_accuracy_list)
-    logfile.write("Average Accuracy: ", overall_accuracy)
+    final_string = "Average Accuracy"
+    final_string = final_string.__add__(str(overall_accuracy))
+    logfile.write(final_string)
 
