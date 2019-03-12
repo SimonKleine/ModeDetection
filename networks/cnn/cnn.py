@@ -130,7 +130,7 @@ if __name__ == '__main__':
 
 
         logfile.write(string_for_logfile)
-        overall_accuracy_list = overall_accuracy_list.append(accuracy)
+        overall_accuracy_list.append(accuracy)
     overall_accuracy = sum(overall_accuracy_list) / overall_accuracy_list.size
     logfile.write("Average Accuracy: ", overall_accuracy)
 
