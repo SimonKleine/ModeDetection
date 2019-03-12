@@ -25,11 +25,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
         '''
-        self.firtconvolutionlayer = nn.Conv1d(3, 18, 5)
+        self.firtconvolutionlayer = nn.Conv1d(3, 18, 9)
         self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.secondconvolutionlayer = nn.Conv1d(18, 324, 5)
+        self.secondconvolutionlayer = nn.Conv1d(18, 324, 9)
         self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.firstlinearlayer = nn.Linear(117 * 18 * 18, 7)
+        self.firstlinearlayer = nn.Linear(114 * 18 * 18, 7)
 
     def forward(self, x):
         '''
@@ -43,7 +43,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
         x = self.secondpoolinglayer(x)
-        x = x.view(1, 117 * 18 * 18)
+        x = x.view(1, 36936)
         x = self.firstlinearlayer(x)
         return x
 
@@ -66,7 +66,7 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
 
 
 if __name__ == '__main__':
-    EPOCH = 50
+    EPOCH = 500
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
