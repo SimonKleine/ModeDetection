@@ -79,7 +79,7 @@ if __name__ == '__main__':
     users = data.users
     logfile = open("logfilecnn.txt", "w")
     for current_user in users:
-        users_train = users
+        users_train = users.copy()
         users_train.remove(current_user)
         users_valid = [current_user]
         print(users)
