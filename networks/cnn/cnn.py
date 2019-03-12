@@ -124,8 +124,10 @@ if __name__ == '__main__':
         accuracy = accuracy(cnn, valid_target_matrix_1d,
                             valid_windows_no_label)
         string_for_logfile = "User: "
-        string_for_logfile = string_for_logfile.__add__(current_user,
-                                ", Accuracy: ", accuracy)
+        string_for_logfile = string_for_logfile.__add__(current_user)
+        string_for_logfile = string_for_logfile.__add__(", Accuracy: ")
+        string_for_logfile = string_for_logfile.__add__(accuracy)
+                                
 
         logfile.write(string_for_logfile)
         overall_accuracy_list = overall_accuracy_list.append(accuracy)
