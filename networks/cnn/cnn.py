@@ -77,7 +77,7 @@ if __name__ == '__main__':
         args.training_data_file_path, perform_interpolation=True)
 
     users = data.users
-    logfile = open("logfilecnn_epoch=50.txt", "w")
+    logfile = open("logfilecnn_epoch=500.txt", "w")
     for current_user in users:
         users_train = users.copy()
         users_train.remove(current_user)
