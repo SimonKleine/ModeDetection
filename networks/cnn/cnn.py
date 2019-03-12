@@ -47,7 +47,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.firstlinearlayer(x)
         return x
 
-def accuracy(cnn, target_matrix_1d, train_windows_no_label):
+def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
     print("Calculating accuracy..")
     output_list = []
     for step, input in enumerate(train_windows_no_label):
@@ -124,7 +124,7 @@ if __name__ == '__main__':
         if len(valid_windows_no_label) == 0:
             continue
         print(valid_windows_no_label)
-        accuracy = accuracy(cnn, valid_target_matrix_1d,
+        accuracy = get_accuracy(cnn, valid_target_matrix_1d,
                             valid_windows_no_label)
         string_for_logfile = "User: "
         string_for_logfile = string_for_logfile.__add__(current_user)
