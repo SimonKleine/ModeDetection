@@ -57,7 +57,7 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
     print("Calculating accuracy..")
     output_list = []
     for step, input in enumerate(train_windows_no_label):
-        #input = input.cuda()
+        input = input.cuda()
         output = cnn(input.unsqueeze(0))
         output = output.detach()
         output = output.cpu()
@@ -135,7 +135,7 @@ if __name__ == '__main__':
         cnn = ConvolutionalNeuralNetwork()
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
-        #cnn.cuda()
+        cnn.cuda()
         optimizer = optim.Adam(cnn.parameters(), lr=0.1)
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
@@ -144,11 +144,9 @@ if __name__ == '__main__':
             train_windows_no_label = shufflearray[0]
             target_matrix_1d = shufflearray[1]
             for step, input in enumerate(train_windows_no_label):
-                #input = input.cuda()
-                #target_matrix_1d = target_matrix_1d.cuda()
+                input = input.cuda()
+                target_matrix_1d = target_matrix_1d.cuda()
                 output = cnn(input.unsqueeze(0))
-                print(output[0])
-                print(target_matrix_1d[step].unsqueeze(0))
                 loss = loss_func(output[0].unsqueeze(0),
                                  target_matrix_1d[step].unsqueeze(0))
                 optimizer.zero_grad()
