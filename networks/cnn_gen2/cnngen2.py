@@ -48,7 +48,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.secondpoolinglayer(x)
         x = x.view(1, 49 * 18 * 18)
         x = self.firstlinearlayer(x)
-        x = self.seconlinearlayer
+        x = self.seconlinearlayer(x)
         return x
 
 def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
