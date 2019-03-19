@@ -127,9 +127,6 @@ if __name__ == '__main__':
             target_label_to_number.get_target_matrix_1d(
                 valid_windows)
 
-        shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
-        train_windows_no_label = shufflearray[0]
-        target_matrix_1d = shufflearray[1]
 
         cnn = ConvolutionalNeuralNetwork()
         # if os.path.isfile("cnn.pt"):
@@ -140,8 +137,8 @@ if __name__ == '__main__':
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
             shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
-            train_windows_no_label = shufflearray[0].copy()
-            target_matrix_1d = shufflearray[1].copy()
+            train_windows_no_label = shufflearray[0]
+            target_matrix_1d = shufflearray[1]
             for step, input in enumerate(train_windows_no_label):
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
