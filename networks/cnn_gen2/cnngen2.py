@@ -67,25 +67,29 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
     return acc
 
 def shuffle(train_windows, target_matrix):
-    print("shuffle")
+    print("shuffling")
     head_train = []
     tail_train = []
     head_target = []
     tail_target = []
-    input_train = train_windows.copy()
-    input_target = target_matrix.copy()
+    input_train = train_windows
+    input_target = target_matrix
     for x in range (1, 100):
         splitpoint1 = random.randint(1, len(train_windows))
         splitpoint2 = random.randint(splitpoint1, len(train_windows))
         head_train = input_train[:splitpoint1]
         middle_train = input_train[splitpoint1:splitpoint2]
         tail_train = input_train[splitpoint2:]
-        input_train = middle_train + head_train + tail_train
+        print(tail_train)
+        print(head_train)
+        input_train = torch.cat(middle_train, head_train)
+        input_train = torch.cat(input_train, tail_train)
         head_target = input_target[:splitpoint1]
         middle_target = input_target[splitpoint1:splitpoint2]
         tail_target = input_target[splitpoint2:]
-        input_target = middle_target + head_target +tail_target
-    return input_train, input_target
+
+
+        return input_train, input_target
 
 
 
