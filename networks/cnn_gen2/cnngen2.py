@@ -82,8 +82,8 @@ def shuffle(train_windows, target_matrix):
         tail_train = input_train[splitpoint2:]
         print(tail_train)
         print(head_train)
-        input_train = torch.cat(middle_train, head_train)
-        input_train = torch.cat(input_train, tail_train)
+        input_train = torch.cat((middle_train, head_train))
+        input_train = torch.cat((input_train, tail_train))
         head_target = input_target[:splitpoint1]
         middle_target = input_target[splitpoint1:splitpoint2]
         tail_target = input_target[splitpoint2:]
