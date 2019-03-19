@@ -26,11 +26,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
         '''
-        self.firstlayer = nn.Linear(480,1000)
-        self.secondlayer = nn.Linear(1000, 1500)
-        self.thirdlayer = nn.Linear(1500, 2000)
-        self.fourthlayer = nn.Linear(2000, 3000)
-        self.fifthlayer = nn.Linear(3000, 1000)
+        self.firstlayer = nn.Linear(480*3,2000)
+        self.secondlayer = nn.Linear(2000, 2500)
+        self.thirdlayer = nn.Linear(2500, 3000)
+        self.fourthlayer = nn.Linear(3000, 4000)
+        self.fifthlayer = nn.Linear(4000, 1000)
         self.sixthlayer = nn.Linear(1000, 100)
         self.seventhlayer = nn.Linear(100, 7)
 
@@ -42,6 +42,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.thirdlayer(x)
         return x
         '''
+        x = x.view(1, 480 * 3)
         x = self.firstlayer(x)
         x = self.secondlayer(x)
         x = self.thirdlayer(x)
@@ -49,14 +50,14 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.fifthlayer(x)
         x = self.sixthlayer(x)
         x = self.seventhlayer(x)
-        
+
         return x
 
 def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
     print("Calculating accuracy..")
     output_list = []
     for step, input in enumerate(train_windows_no_label):
-        input = input.cuda()
+        #input = input.cuda()
         output = cnn(input.unsqueeze(0))
         output = output.detach()
         output = output.cpu()
@@ -134,7 +135,7 @@ if __name__ == '__main__':
         cnn = ConvolutionalNeuralNetwork()
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
-        cnn.cuda()
+        #cnn.cuda()
         optimizer = optim.Adam(cnn.parameters(), lr=0.1)
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
@@ -143,9 +144,11 @@ if __name__ == '__main__':
             train_windows_no_label = shufflearray[0]
             target_matrix_1d = shufflearray[1]
             for step, input in enumerate(train_windows_no_label):
-                input = input.cuda()
-                target_matrix_1d = target_matrix_1d.cuda()
+                #input = input.cuda()
+                #target_matrix_1d = target_matrix_1d.cuda()
                 output = cnn(input.unsqueeze(0))
+                print(output[0])
+                print(target_matrix_1d[step].unsqueeze(0))
                 loss = loss_func(output[0].unsqueeze(0),
                                  target_matrix_1d[step].unsqueeze(0))
                 optimizer.zero_grad()
