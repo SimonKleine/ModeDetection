@@ -43,6 +43,8 @@ def accuracy(cnn, users_valid):
         output_list.append(np.argmax(output))
     output_list = np.array(output_list)
     target_matrix_1d = np.array(target_matrix_1d)
+    print(output_list)
+    print(target_matrix_1d)
     same = sum(output_list == target_matrix_1d)
     not_same = sum(output_list != target_matrix_1d)
     acc = same / (same + not_same) * 100
@@ -79,7 +81,8 @@ if __name__ == '__main__':
         print("Training in progress(Epoch:", epoch, ")..")
         for step, input in enumerate(train_windows_no_label):
             output = cnn(input.unsqueeze(0))
-            loss = loss_func(output[0], target_matrix_1d[step].unsqueeze(0))
+            loss = loss_func(output[0],
+                             target_matrix_1d[step].unsqueeze(0))
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
