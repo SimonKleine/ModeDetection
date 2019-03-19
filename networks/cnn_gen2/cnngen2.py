@@ -80,13 +80,13 @@ def shuffle(train_windows, target_matrix):
         head_train = input_train[:splitpoint1]
         middle_train = input_train[splitpoint1:splitpoint2]
         tail_train = input_train[splitpoint2:]
-        print(tail_train)
-        print(head_train)
         input_train = torch.cat((middle_train, head_train))
         input_train = torch.cat((input_train, tail_train))
         head_target = input_target[:splitpoint1]
         middle_target = input_target[splitpoint1:splitpoint2]
         tail_target = input_target[splitpoint2:]
+        input_target = torch.cat(((middle_target, head_target)))
+        input_target =  torch.cat((input_target, tail_target))
 
 
         return input_train, input_target
@@ -128,8 +128,8 @@ if __name__ == '__main__':
                 valid_windows)
 
         shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
-        train_windows_no_label = shufflearray[0].copy()
-        target_matrix_1d = shufflearray[1].copy()
+        train_windows_no_label = shufflearray[0]
+        target_matrix_1d = shufflearray[1]
 
         cnn = ConvolutionalNeuralNetwork()
         # if os.path.isfile("cnn.pt"):
