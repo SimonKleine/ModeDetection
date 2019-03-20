@@ -30,8 +30,9 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.firstpoolinglayer = nn.AvgPool1d(kernel_size=3)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 9)
         self.secondpoolinglayer = nn.AvgPool1d(kernel_size=3)
-        self.firstlinearlayer = nn.Linear(49 * 18 * 18, 500)
-        self.seconlinearlayer = nn.Linear(500,7)
+        self.firstlinearlayer = nn.Linear(49 * 18 * 18, 30000)
+        self.secondlinearlayer = nn.Linear(30000,1000)
+        self.thirdlinearlayer = nn.Linear(1000, 7)
 
 
     def forward(self, x):
@@ -48,7 +49,8 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.secondpoolinglayer(x)
         x = x.view(1, 49 * 18 * 18)
         x = self.firstlinearlayer(x)
-        x = self.seconlinearlayer(x)
+        x = self.secondlinearlayer(x)
+        x = self.thirdlinearlayer(x)
         return x
 
 def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
@@ -69,7 +71,7 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
     return acc
 
 def shuffle(train_windows, target_matrix):
-    print("shuffling")
+    print("shuffle")
     head_train = []
     tail_train = []
     head_target = []
