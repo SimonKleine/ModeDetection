@@ -30,8 +30,8 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.firstpoolinglayer = nn.AvgPool1d(kernel_size=3)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 9)
         self.secondpoolinglayer = nn.AvgPool1d(kernel_size=3)
-        self.firstlinearlayer = nn.Linear(49 * 18 * 18, 30000)
-        self.secondlinearlayer = nn.Linear(30000,1000)
+        self.firstlinearlayer = nn.Linear(49 * 18 * 18, 17000)
+        self.secondlinearlayer = nn.Linear(17000,1000)
         self.thirdlinearlayer = nn.Linear(1000, 7)
 
 
@@ -152,10 +152,10 @@ if __name__ == '__main__':
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-        file_name_network = "cnn."
-        file_name_network = file_name_network.__add__(current_user)
-        file_name_network = file_name_network.__add__(".pt")
-        torch.save(cnn, file_name_network)
+        #file_name_network = "cnn."
+        #file_name_network = file_name_network.__add__(current_user)
+        #file_name_network = file_name_network.__add__(".pt")
+        #torch.save(cnn, file_name_network)
         if len(valid_target_matrix_1d) == 0:
             continue
         if len(valid_windows_no_label) == 0:
