@@ -6,6 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 import accelerometerfeatures.utils.pytorch.dataset as dataset
 import numpy as np
+import random
 from argparse import ArgumentParser
 #import networks.simplecnn as simplecnn
 import target_label_to_number
@@ -25,11 +26,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
         '''
-        self.firtconvolutionlayer = nn.Conv1d(3, 18, 17)
+        self.firtconvolutionlayer = nn.Conv1d(3, 18, 7)
         self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.secondconvolutionlayer = nn.Conv1d(18, 324, 17)
+        self.secondconvolutionlayer = nn.Conv1d(18, 324, 7)
         self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.firstlinearlayer = nn.Linear(108 * 18 * 18, 7)
+        self.firstlinearlayer = nn.Linear(115 * 18 * 18, 7)
 
     def forward(self, x):
         '''
@@ -43,7 +44,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
         x = self.secondpoolinglayer(x)
-        x = x.view(1, 108 * 18 * 18)
+        x = x.view(1, 115 * 18 * 18)
         x = self.firstlinearlayer(x)
         return x
 
@@ -64,9 +65,34 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
 
     return acc
 
+def shuffle(train_windows, target_matrix):
+    print("shuffle")
+    head_train = []
+    tail_train = []
+    head_target = []
+    tail_target = []
+    input_train = train_windows
+    input_target = target_matrix
+    for x in range (1, 100):
+        splitpoint1 = random.randint(1, len(train_windows))
+        splitpoint2 = random.randint(splitpoint1, len(train_windows))
+        head_train = input_train[:splitpoint1]
+        middle_train = input_train[splitpoint1:splitpoint2]
+        tail_train = input_train[splitpoint2:]
+        input_train = torch.cat((middle_train, head_train))
+        input_train = torch.cat((input_train, tail_train))
+        head_target = input_target[:splitpoint1]
+        middle_target = input_target[splitpoint1:splitpoint2]
+        tail_target = input_target[splitpoint2:]
+        input_target = torch.cat(((middle_target, head_target)))
+        input_target =  torch.cat((input_target, tail_target))
+
+
+        return input_train, input_target
+
 
 if __name__ == '__main__':
-    EPOCH = 10
+    EPOCH = 1
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
@@ -77,7 +103,7 @@ if __name__ == '__main__':
         args.training_data_file_path, perform_interpolation=True)
 
     users = data.users
-    logfile = open("logfilecnn_epoch=10.txt", "w")
+    logfile = open("logfilecnn_epoch=1.txt", "w")
     for current_user in users:
         users_train = users.copy()
         users_train.remove(current_user)
@@ -108,6 +134,9 @@ if __name__ == '__main__':
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
+            shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
+            train_windows_no_label = shufflearray[0]
+            target_matrix_1d = shufflearray[1]
             for step, input in enumerate(train_windows_no_label):
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
