@@ -28,7 +28,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         '''
         self.firtconvolutionlayer = nn.Conv1d(3, 18, 9)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 9)
-        self.firstlinearlayer = nn.Linear(462 * 18 * 18, 7)
+        self.firstlinearlayer = nn.Linear(150336, 7)
      
 
 
@@ -42,7 +42,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         '''
         x = self.firtconvolutionlayer(x)
         x = self.secondconvolutionlayer(x)
-        x = x.view(1, 462 * 18 * 18)
+        x = x.view(1, 150336)
         x = self.firstlinearlayer(x)
      
         return x
