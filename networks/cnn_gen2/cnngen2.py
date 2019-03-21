@@ -30,9 +30,8 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.firstpoolinglayer = nn.AvgPool1d(kernel_size=3)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 9)
         self.secondpoolinglayer = nn.AvgPool1d(kernel_size=3)
-        self.firstlinearlayer = nn.Linear(49 * 18 * 18, 17000)
-        self.secondlinearlayer = nn.Linear(17000,1000)
-        self.thirdlinearlayer = nn.Linear(1000, 7)
+        self.firstlinearlayer = nn.Linear(49 * 18 * 18, 7)
+     
 
 
     def forward(self, x):
@@ -49,8 +48,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.secondpoolinglayer(x)
         x = x.view(1, 49 * 18 * 18)
         x = self.firstlinearlayer(x)
-        x = self.secondlinearlayer(x)
-        x = self.thirdlinearlayer(x)
+     
         return x
 
 def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
@@ -71,7 +69,7 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
     return acc
 
 def shuffle(train_windows, target_matrix):
-    print("shuffle")
+    print("shuffling")
     head_train = []
     tail_train = []
     head_target = []
@@ -99,7 +97,7 @@ def shuffle(train_windows, target_matrix):
 
 
 if __name__ == '__main__':
-    EPOCH = 31
+    EPOCH = 10
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
@@ -110,7 +108,7 @@ if __name__ == '__main__':
         args.training_data_file_path, perform_interpolation=True)
 
     users = data.users
-    logfile = open("logfilecnn_epoch=31.txt", "w")
+    logfile = open("logfilecnn_epoch=10.txt", "w")
     for current_user in users:
         users_train = users.copy()
         users_train.remove(current_user)
@@ -152,10 +150,10 @@ if __name__ == '__main__':
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-        #file_name_network = "cnn."
-        #file_name_network = file_name_network.__add__(current_user)
-        #file_name_network = file_name_network.__add__(".pt")
-        #torch.save(cnn, file_name_network)
+        file_name_network = "cnn."
+        file_name_network = file_name_network.__add__(current_user)
+        file_name_network = file_name_network.__add__(".pt")
+        torch.save(cnn, file_name_network)
         if len(valid_target_matrix_1d) == 0:
             continue
         if len(valid_windows_no_label) == 0:
