@@ -41,9 +41,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         return x
         '''
         x = self.firtconvolutionlayer(x)
-        x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
-        x = self.secondpoolinglayer(x)
         x = x.view(1, 462 * 18 * 18)
         x = self.firstlinearlayer(x)
      
