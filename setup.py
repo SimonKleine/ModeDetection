@@ -15,5 +15,6 @@ setup(
         'numpy==1.15.4',
         'torch==1.0.0',
         'torchvision==0.2.1',
+        'more-itertools==5.0.0',
     ]
 )
