@@ -1,4 +1,4 @@
-# author Simon Kleine
+#author Simon Kleine
 import os
 
 import torch
@@ -8,12 +8,11 @@ import accelerometerfeatures.utils.pytorch.dataset as dataset
 import numpy as np
 import random
 from argparse import ArgumentParser
-# import networks.simplecnn as simplecnn
+#import networks.simplecnn as simplecnn
 import target_label_to_number
-from utils.smoothing import MajorityVoteSmoother
 
 
-class ConvolutionalNeuralNetwork(nn.Module):
+class ConvolutionalNeuralNetwork (nn.Module):
 
     # inputlayer in the paper has 130 sampling points, remember for
     # windowsize in DataLoader
@@ -67,25 +66,6 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
 
     return acc
 
-def get_smoothed_accuracy(cnn, target_matrix_1d, train_windows_no_label):
-    print("Calculating smoothed accuracy..")
-    output_list = []
-    for step, input in enumerate(train_windows_no_label):
-        input = input.cuda()
-        output = cnn(input.unsqueeze(0))
-        output = output.detach()
-        output = output.cpu()
-        output_list.append(np.argmax(output))
-    majority_vote_smoother = MajorityVoteSmoother(10, 30)
-    smoothed_modes = majority_vote_smoother.smooth(output_list)
-    output_list = np.array(smoothed_modes)
-    target_matrix_1d = np.array(target_matrix_1d)
-    same = sum(output_list == target_matrix_1d)
-    not_same = sum(output_list != target_matrix_1d)
-    acc = same / (same + not_same) * 100
-
-    return acc
-
 def shuffle(train_windows, target_matrix):
     print("shuffling")
     head_train = []
@@ -94,7 +74,7 @@ def shuffle(train_windows, target_matrix):
     tail_target = []
     input_train = train_windows
     input_target = target_matrix
-    for x in range(1, 100):
+    for x in range (1, 100):
         splitpoint1 = random.randint(1, len(train_windows))
         splitpoint2 = random.randint(splitpoint1, len(train_windows))
         head_train = input_train[:splitpoint1]
@@ -106,15 +86,17 @@ def shuffle(train_windows, target_matrix):
         middle_target = input_target[splitpoint1:splitpoint2]
         tail_target = input_target[splitpoint2:]
         input_target = torch.cat(((middle_target, head_target)))
-        input_target = torch.cat((input_target, tail_target))
+        input_target =  torch.cat((input_target, tail_target))
+
 
         return input_train, input_target
 
 
+
+
 if __name__ == '__main__':
-    EPOCH = 30
+    EPOCH = 100
     overall_accuracy_list = []
-    overall_smoothed_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
     args = argparser.parse_args()
@@ -124,7 +106,7 @@ if __name__ == '__main__':
         args.training_data_file_path, perform_interpolation=True)
 
     users = data.users
-    logfile = open("logfilecnn_epoch=30.txt", "w")
+    logfile = open("logfilecnn_epoch=100.txt", "w")
     for current_user in users:
         users_train = users.copy()
         users_train.remove(current_user)
@@ -140,10 +122,11 @@ if __name__ == '__main__':
             [window[0] for window in valid_windows])
         target_matrix_1d = \
             target_label_to_number.get_target_matrix_1d(
-                train_windows)
+            train_windows)
         valid_target_matrix_1d = \
             target_label_to_number.get_target_matrix_1d(
                 valid_windows)
+
 
         cnn = ConvolutionalNeuralNetwork()
         # if os.path.isfile("cnn.pt"):
@@ -165,39 +148,27 @@ if __name__ == '__main__':
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-        file_name_network = "cnn."
-        file_name_network = file_name_network.__add__(current_user)
-        file_name_network = file_name_network.__add__(".pt")
-        torch.save(cnn, file_name_network)
+        #file_name_network = "cnn."
+        #file_name_network = file_name_network.__add__(current_user)
+        #file_name_network = file_name_network.__add__(".pt")
+        #torch.save(cnn, file_name_network)
         if len(valid_target_matrix_1d) == 0:
             continue
         if len(valid_windows_no_label) == 0:
             continue
         accuracy = get_accuracy(cnn, valid_target_matrix_1d,
-                                valid_windows_no_label)
-        smoothed_accuracy = get_smoothed_accuracy(cnn,
-                                valid_target_matrix_1d,
-                                valid_windows_no_label)
+                            valid_windows_no_label)
         string_for_logfile = "User: "
         string_for_logfile = string_for_logfile.__add__(current_user)
         string_for_logfile = string_for_logfile.__add__(", Accuracy: ")
         string_for_logfile = string_for_logfile.__add__(str(accuracy))
         string_for_logfile = string_for_logfile.__add__("\n")
-        string_for_logfile = string_for_logfile.__add__(current_user)
-        string_for_logfile = string_for_logfile.__add__(", Smoothed_accuracy: ")
-        string_for_logfile = string_for_logfile.__add__(str(smoothed_accuracy))
-        string_for_logfile = string_for_logfile.__add__("\n")
+
 
         logfile.write(string_for_logfile)
         overall_accuracy_list.append(accuracy)
-        overall_smoothed_accuracy_list.append((smoothed_accuracy))
     overall_accuracy = sum(overall_accuracy_list) / len(overall_accuracy_list)
-    overall_smoothed_accuracy = sum(overall_smoothed_accuracy_list) / \
-                                len(overall_smoothed_accuracy_list)
-    final_string = "Average Accuracy: "
+    final_string = "Average Accuracy"
     final_string = final_string.__add__(str(overall_accuracy))
-    final_string = final_string.__add__("\n")
-    final_string = final_string.__add__("Smoothed average accuracy: ")
-    final_string = final_string.__add__(str(overall_smoothed_accuracy))
     logfile.write(final_string)
 
