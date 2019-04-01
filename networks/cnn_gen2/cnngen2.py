@@ -26,11 +26,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
         '''
-        self.firtconvolutionlayer = nn.Conv1d(3, 18, 19)
-        self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.secondconvolutionlayer = nn.Conv1d(18, 324, 19)
-        self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.firstlinearlayer = nn.Linear(106 * 18 * 18, 7)
+        self.firtconvolutionlayer = nn.Conv1d(3, 18, 25)
+        self.firstpoolinglayer = nn.LPPool1d(1.8, kernel_size=3)
+        self.secondconvolutionlayer = nn.Conv1d(18, 324, 25)
+        self.secondpoolinglayer = nn.LPPool1d(1.8, kernel_size=3)
+        self.firstlinearlayer = nn.Linear(102 * 18 * 18, 7)
      
 
 
@@ -43,10 +43,8 @@ class ConvolutionalNeuralNetwork (nn.Module):
         return x
         '''
         x = self.firtconvolutionlayer(x)
-        x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
-        x = self.secondpoolinglayer(x)
-        x = x.view(1, 106 * 18 * 18)
+        x = x.view(1, 102 * 18 * 18)
         x = self.firstlinearlayer(x)
      
         return x
@@ -150,10 +148,10 @@ if __name__ == '__main__':
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-        file_name_network = "cnn."
-        file_name_network = file_name_network.__add__(current_user)
-        file_name_network = file_name_network.__add__(".pt")
-        torch.save(cnn, file_name_network)
+        #file_name_network = "cnn."
+        #file_name_network = file_name_network.__add__(current_user)
+        #file_name_network = file_name_network.__add__(".pt")
+        #torch.save(cnn, file_name_network)
         if len(valid_target_matrix_1d) == 0:
             continue
         if len(valid_windows_no_label) == 0:
