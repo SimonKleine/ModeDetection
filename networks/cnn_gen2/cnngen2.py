@@ -30,7 +30,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.firstpoolinglayer = nn.LPPool1d(1.8, kernel_size=3)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 25)
         self.secondpoolinglayer = nn.LPPool1d(1.8, kernel_size=3)
-        self.firstlinearlayer = nn.Linear(139968, 7)
+        self.firstlinearlayer = nn.Linear(150336, 7)
      
 
 
@@ -44,7 +44,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         '''
         x = self.firtconvolutionlayer(x)
         x = self.secondconvolutionlayer(x)
-        x = x.view(1, 139968)
+        x = x.view(1, 150336)
         x = self.firstlinearlayer(x)
      
         return x
@@ -95,7 +95,7 @@ def shuffle(train_windows, target_matrix):
 
 
 if __name__ == '__main__':
-    EPOCH = 50
+    EPOCH = 30
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
@@ -106,7 +106,7 @@ if __name__ == '__main__':
         args.training_data_file_path, perform_interpolation=True)
 
     users = data.users
-    logfile = open("logfilecnn_epoch=50.txt", "w")
+    logfile = open("logfilecnn_epoch=30.txt", "w")
     for current_user in users:
         users_train = users.copy()
         users_train.remove(current_user)
