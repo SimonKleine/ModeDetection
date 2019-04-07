@@ -26,9 +26,9 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
         '''
-        self.firtconvolutionlayer = nn.Conv1d(3, 18, 11)
+        self.firtconvolutionlayer = nn.Conv1d(3, 18, 25)
         self.firstpoolinglayer = nn.LPPool1d(1.8, kernel_size=3)
-        self.secondconvolutionlayer = nn.Conv1d(18, 324, 11)
+        self.secondconvolutionlayer = nn.Conv1d(18, 324, 25)
         self.secondpoolinglayer = nn.LPPool1d(1.8, kernel_size=3)
         self.firstlinearlayer = nn.Linear(139968, 7)
      
