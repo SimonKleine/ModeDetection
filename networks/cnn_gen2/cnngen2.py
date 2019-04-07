@@ -26,11 +26,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
         '''
-        self.firtconvolutionlayer = nn.Conv1d(3, 18, 25)
+        self.firtconvolutionlayer = nn.Conv1d(3, 18, 9)
         self.firstpoolinglayer = nn.LPPool1d(1.8, kernel_size=3)
-        self.secondconvolutionlayer = nn.Conv1d(18, 324, 25)
+        self.secondconvolutionlayer = nn.Conv1d(18, 324, 9)
         self.secondpoolinglayer = nn.LPPool1d(1.8, kernel_size=3)
-        self.firstlinearlayer = nn.Linear(139968, 7)
+        self.firstlinearlayer = nn.Linear(150336, 7)
      
 
 
@@ -44,7 +44,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         '''
         x = self.firtconvolutionlayer(x)
         x = self.secondconvolutionlayer(x)
-        x = x.view(1, 139968)
+        x = x.view(1, 150336)
         x = self.firstlinearlayer(x)
      
         return x
@@ -106,7 +106,7 @@ if __name__ == '__main__':
         args.training_data_file_path, perform_interpolation=True)
 
     users = data.users
-    logfile = open("logfilecnn_epoch=30.txt", "w")
+    logfile = open("logfilecnn_epoch=30_run2.txt", "w")
     for current_user in users:
         users_train = users.copy()
         users_train.remove(current_user)
