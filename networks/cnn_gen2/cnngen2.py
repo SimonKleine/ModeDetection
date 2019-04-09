@@ -95,7 +95,7 @@ def shuffle(train_windows, target_matrix):
 
 
 if __name__ == '__main__':
-    EPOCH = 30
+    EPOCH = 500
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
@@ -106,7 +106,7 @@ if __name__ == '__main__':
         args.training_data_file_path, perform_interpolation=True)
 
     users = data.users
-    logfile = open("logfilecnn_epoch=30_run2.txt", "w")
+    logfile = open("logfilecnn_epoch=500.txt", "w")
     for current_user in users:
         users_train = users.copy()
         users_train.remove(current_user)
