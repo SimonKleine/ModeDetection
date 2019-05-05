@@ -6,10 +6,10 @@ import torch.nn as nn
 import torch.optim as optim
 import accelerometerfeatures.utils.pytorch.dataset as dataset
 import numpy as np
-import random
 from argparse import ArgumentParser
 #import networks.simplecnn as simplecnn
 import target_label_to_number
+import random
 
 
 class ConvolutionalNeuralNetwork (nn.Module):
@@ -26,11 +26,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
         '''
-        self.firtconvolutionlayer = nn.Conv1d(3, 18, 9)
+        self.firtconvolutionlayer = nn.Conv1d(3, 18, 7)
         self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.secondconvolutionlayer = nn.Conv1d(18, 324, 9)
+        self.secondconvolutionlayer = nn.Conv1d(18, 324, 7)
         self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.firstlinearlayer = nn.Linear(114 * 18 * 18, 7)
+        self.firstlinearlayer = nn.Linear(115 * 18 * 18, 7)
 
     def forward(self, x):
         '''
@@ -44,7 +44,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
         x = self.secondpoolinglayer(x)
-        x = x.view(1, 36936)
+        x = x.view(1, 37260)
         x = self.firstlinearlayer(x)
         return x
 
@@ -68,6 +68,7 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
 
 if __name__ == '__main__':
     random.seed(111)
+    torch.manual_seed(0)
     EPOCH = 50
     overall_accuracy_list = []
     argparser = ArgumentParser()
@@ -131,13 +132,10 @@ if __name__ == '__main__':
         string_for_logfile = string_for_logfile.__add__(current_user)
         string_for_logfile = string_for_logfile.__add__(", Accuracy: ")
         string_for_logfile = string_for_logfile.__add__(str(accuracy))
-        string_for_logfile = string_for_logfile.__add__("\n")
 
 
         logfile.write(string_for_logfile)
         overall_accuracy_list.append(accuracy)
     overall_accuracy = sum(overall_accuracy_list) / len(overall_accuracy_list)
-    final_string = "Average Accuracy"
-    final_string = final_string.__add__(str(overall_accuracy))
-    logfile.write(final_string)
+    logfile.write("Average Accuracy: ", overall_accuracy)
 
