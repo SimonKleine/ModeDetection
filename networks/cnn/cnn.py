@@ -67,8 +67,11 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
 
 
 if __name__ == '__main__':
-    random.seed(111)
+    random.seed(0)
     torch.manual_seed(0)
+    np.random.seed(0)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
     EPOCH = 50
     overall_accuracy_list = []
     argparser = ArgumentParser()
@@ -132,10 +135,14 @@ if __name__ == '__main__':
         string_for_logfile = string_for_logfile.__add__(current_user)
         string_for_logfile = string_for_logfile.__add__(", Accuracy: ")
         string_for_logfile = string_for_logfile.__add__(str(accuracy))
+        string_for_logfile = string_for_logfile.__add__("\n")
 
 
         logfile.write(string_for_logfile)
         overall_accuracy_list.append(accuracy)
     overall_accuracy = sum(overall_accuracy_list) / len(overall_accuracy_list)
-    logfile.write("Average Accuracy: ", overall_accuracy)
+    final_string = "Average Accuracy"
+    final_string = final_string.__add__(str(overall_accuracy))
+    logfile.write(final_string)
+
 
