@@ -138,9 +138,9 @@ if __name__ == '__main__':
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
-            shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
-            train_windows_no_label = shufflearray[0]
-            target_matrix_1d = shufflearray[1]
+            #shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
+            #train_windows_no_label = shufflearray[0]
+            #target_matrix_1d = shufflearray[1]
             for step, input in enumerate(train_windows_no_label):
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
