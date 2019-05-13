@@ -29,7 +29,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.firtconvolutionlayer = nn.Conv1d(3, 18, 4)
         self.firstpoolinglayer = nn.AvgPool1d(kernel_size=8)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 4)
-        self.secondpoolinglayer = nn.AvgPool1d(kernel_size=7)
+        self.secondpoolinglayer = nn.AvgPool1d(kernel_size=8)
         self.firstlinearlayer = nn.Linear(2592, 8)
      
 
