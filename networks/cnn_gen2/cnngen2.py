@@ -30,7 +30,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.firstpoolinglayer = nn.AvgPool1d(kernel_size=8)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 4)
         self.secondpoolinglayer = nn.AvgPool1d(kernel_size=8)
-        self.firstlinearlayer = nn.Linear(2592, 8)
+        self.firstlinearlayer = nn.Linear(2268, 8)
      
 
 
@@ -46,7 +46,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
         x = self.secondpoolinglayer(x)
-        x = x.view(1, 2592)
+        x = x.view(1, 2268)
         x = self.firstlinearlayer(x)
      
         return x
