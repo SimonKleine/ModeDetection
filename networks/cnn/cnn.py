@@ -32,7 +32,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 5)
         self.secondpoolinglayer = nn.LPPool1d(10, kernel_size=3)
         self.secondactivationfunction = nn.ReLU()
-        self.firstlinearlayer = nn.Linear(150336, 7)
+        self.firstlinearlayer = nn.Linear(16524, 7)
      
 
 
@@ -50,7 +50,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.secondconvolutionlayer(x)
         x = self.secondpoolinglayer(x)
         x = self.secondactivationfunction(x)
-        x = x.view(1, 150336)
+        x = x.view(1, 16524)
         x = self.firstlinearlayer(x)
      
         return x
