@@ -27,11 +27,14 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.thirdlayer = nn.Linear(37260, 7)
         '''
         self.firtconvolutionlayer = nn.Conv1d(3, 18, 5)
-        self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
+        self.firstpoolinglayer = nn.LPPool1d(10, kernel_size=2)
+        self.firstactivationfunction = nn.ReLU()
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 5)
-        self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.firstlinearlayer = nn.Linear(117 * 18 * 18, 7)
-        self.softmax = nn.Softmax()
+        self.secondpoolinglayer = nn.LPPool1d(10, kernel_size=2)
+        self.secondactivationfunction = nn.ReLU()
+        self.firstlinearlayer = nn.Linear(16524, 7)
+     
+
 
     def forward(self, x):
         '''
@@ -43,11 +46,13 @@ class ConvolutionalNeuralNetwork (nn.Module):
         '''
         x = self.firtconvolutionlayer(x)
         x = self.firstpoolinglayer(x)
+        x = self. firstactivationfunction(x)
         x = self.secondconvolutionlayer(x)
         x = self.secondpoolinglayer(x)
-        x = x.view(1, 117 * 18 * 18)
+        x = self.secondactivationfunction(x)
+        x = x.view(1, 16524)
         x = self.firstlinearlayer(x)
-        x = self.softmax(x)
+     
         return x
 
 def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
@@ -123,10 +128,10 @@ if __name__ == '__main__':
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-        #file_name_network = "cnn."
-        #file_name_network = file_name_network.__add__(current_user)
-        #file_name_network = file_name_network.__add__(".pt")
-        #torch.save(cnn, file_name_network)
+        file_name_network = "cnn."
+        file_name_network = file_name_network.__add__(current_user)
+        file_name_network = file_name_network.__add__(".pt")
+        torch.save(cnn, file_name_network)
         if len(valid_target_matrix_1d) == 0:
             continue
         if len(valid_windows_no_label) == 0:
