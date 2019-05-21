@@ -123,10 +123,10 @@ if __name__ == '__main__':
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-        file_name_network = "cnn."
-        file_name_network = file_name_network.__add__(current_user)
-        file_name_network = file_name_network.__add__(".pt")
-        torch.save(cnn, file_name_network)
+        #file_name_network = "cnn."
+        #file_name_network = file_name_network.__add__(current_user)
+        #file_name_network = file_name_network.__add__(".pt")
+        #torch.save(cnn, file_name_network)
         if len(valid_target_matrix_1d) == 0:
             continue
         if len(valid_windows_no_label) == 0:
