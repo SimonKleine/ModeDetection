@@ -30,7 +30,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 4)
         self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.firstlinearlayer = nn.Linear(117 * 18 * 18, 7)
+        self.firstlinearlayer = nn.Linear(117 * 18 * 18, 5)
 
     def forward(self, x):
         '''
@@ -108,7 +108,7 @@ if __name__ == '__main__':
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
         cnn.cuda()
-        optimizer = optim.Adam(cnn.parameters(), lr=0.01)
+        optimizer = optim.Adam(cnn.parameters(), lr=0.1)
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
@@ -121,10 +121,10 @@ if __name__ == '__main__':
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-        file_name_network = "cnn."
-        file_name_network = file_name_network.__add__(current_user)
-        file_name_network = file_name_network.__add__(".pt")
-        torch.save(cnn, file_name_network)
+        #file_name_network = "cnn."
+        #file_name_network = file_name_network.__add__(current_user)
+        #file_name_network = file_name_network.__add__(".pt")
+        #torch.save(cnn, file_name_network)
         if len(valid_target_matrix_1d) == 0:
             continue
         if len(valid_windows_no_label) == 0:

@@ -20,7 +20,7 @@ def target_label_to_number(accelerometer_dataset):
 
 def get_label_number(window):
     """This method assigns to each label of a window a number."""
-    mode_list = ["bike", "car", "walk", "bus", "train", "metro", "tram"]
+    mode_list = ["bike", "car", "walk", "bus", "train"]
     current_label_number = 0
 
     for mode in enumerate(mode_list):
@@ -33,12 +33,12 @@ def get_label_number(window):
 def get_target_matrix(accelerometer_dataset):
     """
     This method takes in an AccelerometerDataset and returns a target matrix
-    (for example [0, 0, 1, 0, 0, 0, 0]) corresponding to the windows in that
+    (for example [0, 0, 1, 0, 0, 0]) corresponding to the windows in that
     set.
     """
     target_list = target_label_to_number(accelerometer_dataset)
     target_matrix = []
-    possible_target_numbers = [0, 1, 2, 3, 4, 5, 6]
+    possible_target_numbers = [0, 1, 2, 3, 4]
 
     for element in target_list:
         target_vector = []
