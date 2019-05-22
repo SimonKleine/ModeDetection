@@ -27,12 +27,10 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.thirdlayer = nn.Linear(37260, 7)
         '''
         self.firtconvolutionlayer = nn.Conv1d(3, 18, 5)
-        self.firstpoolinglayer = nn.LPPool1d(5, kernel_size=2)
+        self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 5)
-        self.secondpoolinglayer = nn.LPPool1d(5, kernel_size=2)
-        self.firstlinearlayer = nn.Linear(37908, 7)
-     
-
+        self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
+        self.firstlinearlayer = nn.Linear(117 * 18 * 18, 7)
 
     def forward(self, x):
         '''
@@ -46,9 +44,8 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
         x = self.secondpoolinglayer(x)
-        x = x.view(1, 37908)
+        x = x.view(1, 117 * 18 * 18)
         x = self.firstlinearlayer(x)
-     
         return x
 
 def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
@@ -111,7 +108,7 @@ if __name__ == '__main__':
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
         cnn.cuda()
-        optimizer = optim.Adam(cnn.parameters(), lr=0.1)
+        optimizer = optim.Adam(cnn.parameters(), lr=0.01)
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
