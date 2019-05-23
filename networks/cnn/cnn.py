@@ -28,7 +28,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         '''
         self.firtconvolutionlayer = nn.Conv1d(3, 18, 3)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 3)
-        self.firstlinearlayer = nn.Linear(472 * 18 * 18, 5)
+        self.firstlinearlayer = nn.Linear(154224, 5)
 
     def forward(self, x):
         '''
@@ -40,7 +40,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         '''
         x = self.firtconvolutionlayer(x)
         x = self.secondconvolutionlayer(x)
-        x = x.view(1, 472 * 18 * 18)
+        x = x.view(1, 154224)
         x = self.firstlinearlayer(x)
         return x
 
