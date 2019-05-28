@@ -28,12 +28,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
         '''
         self.firtconvolutionlayer = nn.Conv1d(3, 18, 3)
         self.firstactivationlayer = nn.ReLU()
-        self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
+        self.firstpoolinglayer = nn.AvgPool1d(kernel_size=2)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 3)
         self.secondactivationlayer = nn.ReLU()
-        self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
+        self.secondpoolinglayer = nn.AvgPool1d(kernel_size=2)
         self.firstlinearlayer = nn.Linear(38232, 5)
-        self.softmax = nn.Softmax()
 
     def forward(self, x):
         '''
@@ -51,7 +50,6 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.secondpoolinglayer(x)
         x = x.view(1, 38232)
         x = self.firstlinearlayer(x)
-        x = self.softmax(x)
         return x
 
 def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
@@ -78,7 +76,7 @@ if __name__ == '__main__':
     np.random.seed(0)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-    EPOCH = 10
+    EPOCH = 50
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
@@ -89,7 +87,7 @@ if __name__ == '__main__':
         args.training_data_file_path, perform_interpolation=True)
 
     users = data.users
-    logfile = open("logfilecnn_epoch=10.txt", "w")
+    logfile = open("logfilecnn_epoch=50.txt", "w")
     for current_user in users:
         users_train = users.copy()
         users_train.remove(current_user)
