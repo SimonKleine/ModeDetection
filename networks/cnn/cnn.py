@@ -28,11 +28,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
         '''
         self.firtconvolutionlayer = nn.Conv1d(3, 18, 3)
         self.firstactivationlayer = nn.ReLU()
-        self.firstpoolinglayer = nn.AvgPool1d(kernel_size=4)
+        self.firstpoolinglayer = nn.MaxPool1d(kernel_size=3)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 3)
         self.secondactivationlayer = nn.ReLU()
-        self.secondpoolinglayer = nn.AvgPool1d(kernel_size=4)
-        self.firstlinearlayer = nn.Linear(9396, 5)
+        self.secondpoolinglayer = nn.MaxPool1d(kernel_size=3)
+        self.firstlinearlayer = nn.Linear(38232, 5)
 
     def forward(self, x):
         '''
@@ -48,7 +48,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.secondconvolutionlayer(x)
         x = self.secondactivationlayer(x)
         x = self.secondpoolinglayer(x)
-        x = x.view(1, 9396)
+        x = x.view(1, 38232)
         x = self.firstlinearlayer(x)
         return x
 
