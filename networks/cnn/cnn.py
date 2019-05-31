@@ -27,12 +27,12 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.thirdlayer = nn.Linear(37260, 7)
         '''
         self.firtconvolutionlayer = nn.Conv1d(3, 18, 3)
-        self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
+        self.firstactivationlayer = nn.ReLU()
+        self.firstpoolinglayer = nn.LPPool1d(5, kernel_size=3)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 3)
-        self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.thirdconvolutionlayer = nn.Conv1d(324, 5832, 3)
-        self.thirdpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.firstlinearlayer = nn.Linear(338256, 5)
+        self.secondactivationlayer = nn.ReLU()
+        self.secondpoolinglayer = nn.LPPool1d(5, kernel_size=3)
+        self.firstlinearlayer = nn.Linear(38232, 5)
 
     def forward(self, x):
         '''
@@ -43,12 +43,12 @@ class ConvolutionalNeuralNetwork (nn.Module):
         return x
         '''
         x = self.firtconvolutionlayer(x)
+        x = self.firstactivationlayer(x)
         x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
+        x = self.secondactivationlayer(x)
         x = self.secondpoolinglayer(x)
-        x = self.thirdconvolutionlayer(x)
-        x = self.thirdpoolinglayer(x)
-        x = x.view(1, 338256)
+        x = x.view(1, 38232)
         x = self.firstlinearlayer(x)
         return x
 
@@ -112,7 +112,7 @@ if __name__ == '__main__':
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
         cnn.cuda()
-        optimizer = optim.Adam(cnn.parameters(), lr=0.1)
+        optimizer = optim.Adam(cnn.parameters(), lr=0.0005)
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
