@@ -69,6 +69,31 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
 
     return acc
 
+def shuffle(train_windows, target_matrix):
+    print("shuffling")
+    head_train = []
+    tail_train = []
+    head_target = []
+    tail_target = []
+    input_train = train_windows
+    input_target = target_matrix
+    for x in range (1, 100):
+        splitpoint1 = random.randint(1, len(train_windows))
+        splitpoint2 = random.randint(splitpoint1, len(train_windows))
+        head_train = input_train[:splitpoint1]
+        middle_train = input_train[splitpoint1:splitpoint2]
+        tail_train = input_train[splitpoint2:]
+        input_train = torch.cat((middle_train, head_train))
+        input_train = torch.cat((input_train, tail_train))
+        head_target = input_target[:splitpoint1]
+        middle_target = input_target[splitpoint1:splitpoint2]
+        tail_target = input_target[splitpoint2:]
+        input_target = torch.cat(((middle_target, head_target)))
+        input_target =  torch.cat((input_target, tail_target))
+
+
+        return input_train, input_target
+
 
 if __name__ == '__main__':
     random.seed(0)
@@ -113,15 +138,18 @@ if __name__ == '__main__':
         #    cnn = torch.load("cnn.pt")
         cnn.cuda()
         optimizer = optim.Adam(cnn.parameters(), lr=0.0005)
-        loss_func = nn.MSELoss()
+        loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
+            shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
+            train_windows_no_label = shufflearray[0]
+            target_matrix_1d = shufflearray[1]
             for step, input in enumerate(train_windows_no_label):
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
                 output = cnn(input.unsqueeze(0))
                 loss = loss_func(output[0].unsqueeze(0),
-                                 target_matrix_1d[step].unsqueeze(0).float())
+                                 target_matrix_1d[step].unsqueeze(0))
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
