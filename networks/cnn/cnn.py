@@ -121,7 +121,7 @@ if __name__ == '__main__':
                 target_matrix_1d = target_matrix_1d.cuda()
                 output = cnn(input.unsqueeze(0))
                 loss = loss_func(output[0].unsqueeze(0),
-                                 target_matrix_1d[step].unsqueeze(0))
+                                 target_matrix_1d[step].unsqueeze(0).float())
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
