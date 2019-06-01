@@ -11,6 +11,7 @@ from argparse import ArgumentParser
 import target_label_to_number
 import random
 import math
+import collections
 
 
 class ConvolutionalNeuralNetwork (nn.Module):
@@ -123,15 +124,10 @@ def majority_vote(list):
     for x in range(0, len(list), windowsize):
         splitlist.append(list[x:x+windowsize])
     for x in splitlist:
-        highestoccurance = 0
-        current_majority = 0
-        length = len(x)
-        for y in range(length):
-            if(x.count(y) >= highestoccurance):
-                highestoccurance = x.count(y)
-                current_majority = y
-        for x in range(length):
-            votedlist = votedlist + [current_majority]
+        counter = collections.Counter(x)
+        mostfrequent = counter.most_common(1)[0][0]
+        for y in range(len(x)):
+            votedlist = votedlist + [mostfrequent]
 
     return votedlist
 
