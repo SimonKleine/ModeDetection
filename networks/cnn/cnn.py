@@ -53,6 +53,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.firstlinearlayer(x)
         return x
 
+
 def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
     print("Calculating accuracy..")
     output_list = []
@@ -69,6 +70,7 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
     acc = same / (same + not_same) * 100
 
     return acc
+
 
 def shuffle(train_windows, target_matrix):
     print("shuffling")
@@ -92,46 +94,46 @@ def shuffle(train_windows, target_matrix):
         input_target = torch.cat(((middle_target, head_target)))
         input_target =  torch.cat((input_target, tail_target))
 
-
         return input_train, input_target
 
-    def get_accuracy_majorityvote(cnn, target_matrix_1d, train_windows_no_label):
-        print("Calculating accuracy..")
-        output_list = []
-        for step, input in enumerate(train_windows_no_label):
-            input = input.cuda()
-            output = cnn(input.unsqueeze(0))
-            output = output.detach()
-            output = output.cpu()
-            output_list.append(np.argmax(output))
-        output_list = np.array(output_list)
-        outputlist_voted = majority_vote(output_list)
-        target_matrix_1d = np.array(target_matrix_1d)
-        same = sum(outputlist_voted == target_matrix_1d)
-        not_same = sum(outputlist_voted != target_matrix_1d)
-        acc = same / (same + not_same) * 100
 
-        return acc
+def get_accuracy_majorityvote(cnn, target_matrix_1d, train_windows_no_label):
+    print("Calculating accuracy..")
+    output_list = []
+    for step, input in enumerate(train_windows_no_label):
+        input = input.cuda()
+        output = cnn(input.unsqueeze(0))
+        output = output.detach()
+        output = output.cpu()
+        output_list.append(np.argmax(output))
+    output_list = np.array(output_list)
+    outputlist_voted = majority_vote(output_list)
+    target_matrix_1d = np.array(target_matrix_1d)
+    same = sum(outputlist_voted == target_matrix_1d)
+    not_same = sum(outputlist_voted != target_matrix_1d)
+    acc = same / (same + not_same) * 100
 
-    def majority_vote(list):
-        windowsize = 5
-        splitlist = []
-        votedlist = []
-        for x in range(0, len(list), windowsize):
-            splitlist.append(list[x:x+windowsize])
-        for x in splitlist:
-            highestoccurance = 0
-            current_majority = 0
-            length = len(x)
-            for y in range(length):
-                if(x.count(y) >= highestoccurance):
-                    highestoccurance = x.count(y)
-                    current_majority = y
-            for x in range(length):
-                votedlist = votedlist + [current_majority]
+    return acc
 
 
-        return votedlist
+def majority_vote(list):
+    windowsize = 5
+    splitlist = []
+    votedlist = []
+    for x in range(0, len(list), windowsize):
+        splitlist.append(list[x:x+windowsize])
+    for x in splitlist:
+        highestoccurance = 0
+        current_majority = 0
+        length = len(x)
+        for y in range(length):
+            if(x.count(y) >= highestoccurance):
+                highestoccurance = x.count(y)
+                current_majority = y
+        for x in range(length):
+            votedlist = votedlist + [current_majority]
+
+    return votedlist
 
 
 if __name__ == '__main__':
