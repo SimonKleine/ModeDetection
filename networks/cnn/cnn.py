@@ -28,11 +28,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
         '''
         self.firtconvolutionlayer = nn.Conv1d(3, 18, 3)
         self.firstactivationlayer = nn.ReLU()
-        self.firstpoolinglayer = nn.LPPool1d(4, kernel_size=5)
+        self.firstpoolinglayer = nn.AvgPool1d(kernel_size=2)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 3)
         self.secondactivationlayer = nn.ReLU()
-        self.secondpoolinglayer = nn.LPPool1d(4, kernel_size=5)
-        self.firstlinearlayer = nn.Linear(5832, 5)
+        self.secondpoolinglayer = nn.AvgPool1d(kernel_size=2)
+        self.firstlinearlayer = nn.Linear(38232, 5)
 
     def forward(self, x):
         '''
@@ -48,7 +48,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         x = self.secondconvolutionlayer(x)
         x = self.secondactivationlayer(x)
         x = self.secondpoolinglayer(x)
-        x = x.view(1, 5832)
+        x = x.view(1, 38232)
         x = self.firstlinearlayer(x)
         return x
 
@@ -113,7 +113,7 @@ if __name__ == '__main__':
         #    cnn = torch.load("cnn.pt")
         cnn.cuda()
         optimizer = optim.Adam(cnn.parameters(), lr=0.0005)
-        loss_func = nn.CrossEntropyLoss()
+        loss_func = nn.MSELoss()
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
             for step, input in enumerate(train_windows_no_label):
