@@ -26,11 +26,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
         '''
-        self.firtconvolutionlayer = nn.Conv1d(3, 18, 7)
-        self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.secondconvolutionlayer = nn.Conv1d(18, 324, 7)
-        self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
-        self.firstlinearlayer = nn.Linear(37260, 5)
+        self.firtconvolutionlayer = nn.Conv1d(3, 18, 3)
+        self.firstactivationlayer = nn.ReLU()
+        self.secondconvolutionlayer = nn.Conv1d(18, 324, 3)
+        self.secondactivationlayer = nn.ReLU()
+        self.firstlinearlayer = nn.Linear(16848, 5)
 
     def forward(self, x):
         '''
@@ -41,10 +41,10 @@ class ConvolutionalNeuralNetwork (nn.Module):
         return x
         '''
         x = self.firtconvolutionlayer(x)
-        x = self.firstpoolinglayer(x)
+        x = self.firstactivationlayer(x)
         x = self.secondconvolutionlayer(x)
-        x = self.secondpoolinglayer(x)
-        x = x.view(1, 37260)
+        x = self.secondactivationlayer(x)
+        x = x.view(1, 16848)
         x = self.firstlinearlayer(x)
         return x
 
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     np.random.seed(0)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-    EPOCH = 10
+    EPOCH = 50
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         args.training_data_file_path, perform_interpolation=True)
 
     users = data.users
-    logfile = open("logfilecnn_epoch=10.txt", "w")
+    logfile = open("logfilecnn_epoch=50.txt", "w")
     for current_user in users:
         users_train = users.copy()
         users_train.remove(current_user)
@@ -108,7 +108,7 @@ if __name__ == '__main__':
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
         cnn.cuda()
-        optimizer = optim.Adam(cnn.parameters(), lr=0.1)
+        optimizer = optim.Adam(cnn.parameters(), lr=0.0005)
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
