@@ -27,12 +27,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.thirdlayer = nn.Linear(37260, 7)
         '''
         self.firtconvolutionlayer = nn.Conv1d(3, 18, 3)
-        self.firstactivationlayer = nn.ReLU()
-        self.firstpoolinglayer = nn.MaxPool1d(kernel_size=4)
+        self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 3)
-        self.secondactivationlayer = nn.ReLU()
-        self.secondpoolinglayer = nn.MaxPool1d(kernel_size=4)
-        self.firstlinearlayer = nn.Linear(9396, 5)
+        self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
+        self.firstlinearlayer = nn.Linear(38232, 5)
+        self.softmax = nn.Softmax()
 
     def forward(self, x):
         '''
@@ -43,13 +42,12 @@ class ConvolutionalNeuralNetwork (nn.Module):
         return x
         '''
         x = self.firtconvolutionlayer(x)
-        x = self.firstactivationlayer(x)
         x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
-        x = self.secondactivationlayer(x)
         x = self.secondpoolinglayer(x)
-        x = x.view(1, 9396)
+        x = x.view(1, 38232)
         x = self.firstlinearlayer(x)
+        x = self.softmax(x)
         return x
 
 def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
