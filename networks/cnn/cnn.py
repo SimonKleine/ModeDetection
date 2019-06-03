@@ -10,8 +10,6 @@ from argparse import ArgumentParser
 #import networks.simplecnn as simplecnn
 import target_label_to_number
 import random
-import math
-import collections
 
 
 class ConvolutionalNeuralNetwork (nn.Module):
@@ -28,13 +26,11 @@ class ConvolutionalNeuralNetwork (nn.Module):
                                         nn.MaxPool1d(kernel_size=2))
         self.thirdlayer = nn.Linear(37260, 7)
         '''
-        self.firtconvolutionlayer = nn.Conv1d(3, 18, 3)
-        self.firstactivationlayer = nn.ReLU()
-        self.firstpoolinglayer = nn.AvgPool1d(kernel_size=2)
-        self.secondconvolutionlayer = nn.Conv1d(18, 324, 3)
-        self.secondactivationlayer = nn.ReLU()
-        self.secondpoolinglayer = nn.AvgPool1d(kernel_size=2)
-        self.firstlinearlayer = nn.Linear(38232, 5)
+        self.firtconvolutionlayer = nn.Conv1d(3, 18, 7)
+        self.firstpoolinglayer = nn.MaxPool1d(kernel_size=2)
+        self.secondconvolutionlayer = nn.Conv1d(18, 324, 7)
+        self.secondpoolinglayer = nn.MaxPool1d(kernel_size=2)
+        self.firstlinearlayer = nn.Linear(37260, 5)
 
     def forward(self, x):
         '''
@@ -45,15 +41,12 @@ class ConvolutionalNeuralNetwork (nn.Module):
         return x
         '''
         x = self.firtconvolutionlayer(x)
-        x = self.firstactivationlayer(x)
         x = self.firstpoolinglayer(x)
         x = self.secondconvolutionlayer(x)
-        x = self.secondactivationlayer(x)
         x = self.secondpoolinglayer(x)
-        x = x.view(1, 38232)
+        x = x.view(1, 37260)
         x = self.firstlinearlayer(x)
         return x
-
 
 def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
     print("Calculating accuracy..")
@@ -73,72 +66,13 @@ def get_accuracy(cnn, target_matrix_1d, train_windows_no_label):
     return acc
 
 
-def shuffle(train_windows, target_matrix):
-    print("shuffling")
-    head_train = []
-    tail_train = []
-    head_target = []
-    tail_target = []
-    input_train = train_windows
-    input_target = target_matrix
-    for x in range (1, 100):
-        splitpoint1 = random.randint(1, len(train_windows))
-        splitpoint2 = random.randint(splitpoint1, len(train_windows))
-        head_train = input_train[:splitpoint1]
-        middle_train = input_train[splitpoint1:splitpoint2]
-        tail_train = input_train[splitpoint2:]
-        input_train = torch.cat((middle_train, head_train))
-        input_train = torch.cat((input_train, tail_train))
-        head_target = input_target[:splitpoint1]
-        middle_target = input_target[splitpoint1:splitpoint2]
-        tail_target = input_target[splitpoint2:]
-        input_target = torch.cat(((middle_target, head_target)))
-        input_target =  torch.cat((input_target, tail_target))
-
-        return input_train, input_target
-
-
-def get_accuracy_majorityvote(cnn, target_matrix_1d, train_windows_no_label):
-    print("Calculating accuracy..")
-    output_list = []
-    for step, input in enumerate(train_windows_no_label):
-        input = input.cuda()
-        output = cnn(input.unsqueeze(0))
-        output = output.detach()
-        output = output.cpu()
-        output_list.append(np.argmax(output))
-    output_list = np.array(output_list)
-    outputlist_voted = majority_vote(output_list)
-    target_matrix_1d = np.array(target_matrix_1d)
-    same = sum(outputlist_voted == target_matrix_1d)
-    not_same = sum(outputlist_voted != target_matrix_1d)
-    acc = same / (same + not_same) * 100
-
-    return acc
-
-
-def majority_vote(list):
-    windowsize = 5
-    splitlist = []
-    votedlist = []
-    for x in range(0, len(list), windowsize):
-        splitlist.append(list[x:x+windowsize])
-    for x in splitlist:
-        counter = collections.Counter(x)
-        mostfrequent = counter.most_common(1)[0][0]
-        for y in range(len(x)):
-            votedlist = votedlist + [mostfrequent]
-
-    return votedlist
-
-
 if __name__ == '__main__':
     random.seed(0)
     torch.manual_seed(0)
     np.random.seed(0)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-    EPOCH = 50
+    EPOCH = 1
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
@@ -149,7 +83,7 @@ if __name__ == '__main__':
         args.training_data_file_path, perform_interpolation=True)
 
     users = data.users
-    logfile = open("logfilecnn_epoch=50.txt", "w")
+    logfile = open("logfilecnn_epoch=1.txt", "w")
     for current_user in users:
         users_train = users.copy()
         users_train.remove(current_user)
@@ -174,13 +108,10 @@ if __name__ == '__main__':
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
         cnn.cuda()
-        optimizer = optim.Adam(cnn.parameters(), lr=0.5)
+        optimizer = optim.Adam(cnn.parameters(), lr=0.1)
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
-            shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
-            train_windows_no_label = shufflearray[0]
-            target_matrix_1d = shufflearray[1]
             for step, input in enumerate(train_windows_no_label):
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
@@ -198,7 +129,7 @@ if __name__ == '__main__':
             continue
         if len(valid_windows_no_label) == 0:
             continue
-        accuracy = get_accuracy_majorityvote(cnn, valid_target_matrix_1d,
+        accuracy = get_accuracy(cnn, valid_target_matrix_1d,
                             valid_windows_no_label)
         string_for_logfile = "User: "
         string_for_logfile = string_for_logfile.__add__(current_user)
