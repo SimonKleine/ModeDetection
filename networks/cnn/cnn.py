@@ -28,10 +28,10 @@ class ConvolutionalNeuralNetwork (nn.Module):
         '''
         self.firtconvolutionlayer = nn.Conv1d(3, 18, 3)
         self.firstactivationlayer = nn.ReLU()
-        self.firstpoolinglayer = nn.LPPool1d(1, kernel_size=2)
+        self.firstpoolinglayer = nn.LPPool1d(9, kernel_size=2)
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 3)
         self.secondactivationlayer = nn.ReLU()
-        self.secondpoolinglayer = nn.LPPool1d(1, kernel_size=2)
+        self.secondpoolinglayer = nn.LPPool1d(9, kernel_size=2)
         self.firstlinearlayer = nn.Linear(38232, 5)
 
     def forward(self, x):
@@ -115,6 +115,8 @@ if __name__ == '__main__':
         optimizer = optim.Adam(cnn.parameters(), lr=0.0005)
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
+            meanloss = 0
+            iteration
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
             for step, input in enumerate(train_windows_no_label):
                 input = input.cuda()
@@ -122,9 +124,13 @@ if __name__ == '__main__':
                 output = cnn(input.unsqueeze(0))
                 loss = loss_func(output[0].unsqueeze(0),
                                  target_matrix_1d[step].unsqueeze(0))
+                meanloss = meanloss + abs(loss)
+                iteration = step + 1
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
+            meanloss = meanloss / iteration
+            print(meanloss)
         #file_name_network = "cnn."
         #file_name_network = file_name_network.__add__(current_user)
         #file_name_network = file_name_network.__add__(".pt")
