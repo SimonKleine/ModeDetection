@@ -177,6 +177,7 @@ if __name__ == '__main__':
         optimizer = optim.Adam(cnn.parameters(), lr=0.0005)
         loss_func = nn.CrossEntropyLoss()
         EPOCH = 1
+        meanloss = 1
         while((meanloss > 0.05) & (EPOCH <= 500)):
             print("Training in progress(Epoch: ", EPOCH)
             EPOCH = EPOCH + 1
