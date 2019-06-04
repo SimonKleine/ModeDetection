@@ -116,7 +116,7 @@ if __name__ == '__main__':
         loss_func = nn.CrossEntropyLoss()
         for epoch in range(EPOCH):
             meanloss = 0
-            iteration
+            iteration = 0
             print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
             for step, input in enumerate(train_windows_no_label):
                 input = input.cuda()
