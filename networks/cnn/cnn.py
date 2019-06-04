@@ -138,7 +138,7 @@ if __name__ == '__main__':
     np.random.seed(0)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-    EPOCH = 50
+    EPOCH = 1
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
@@ -176,8 +176,10 @@ if __name__ == '__main__':
         cnn.cuda()
         optimizer = optim.Adam(cnn.parameters(), lr=0.0005)
         loss_func = nn.CrossEntropyLoss()
-        for epoch in range(EPOCH):
-            print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
+        EPOCH = 1
+        while((meanloss > 0.05) & (EPOCH <= 500)):
+            print("Training in progress(Epoch: ", EPOCH)
+            EPOCH = EPOCH + 1
             shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
             train_windows_no_label = shufflearray[0]
             target_matrix_1d = shufflearray[1]
