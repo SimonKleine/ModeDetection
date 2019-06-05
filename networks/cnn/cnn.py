@@ -34,7 +34,7 @@ class ConvolutionalNeuralNetwork (nn.Module):
         self.secondconvolutionlayer = nn.Conv1d(18, 324, 3)
         self.secondactivationlayer = nn.ReLU()
         self.secondpoolinglayer = nn.AvgPool1d(kernel_size=2)
-        self.firstlinearlayer = nn.Linear(38232, 5)
+        self.firstlinearlayer = nn.Linear(38232, 2)
 
     def forward(self, x):
         '''
@@ -97,23 +97,6 @@ def shuffle(train_windows, target_matrix):
 
         return input_train, input_target
 
-def shuffle2(input):
-    output = input
-    for x in range (1, 100):
-        splitpoint1 = random.randint(1, len(train_windows))
-        splitpoint2 = random.randint(splitpoint1, len(train_windows))
-        head_train = output[:splitpoint1]
-        middle_train = output[splitpoint1:splitpoint2]
-        tail_train = output[splitpoint2:]
-        output = []
-        for x in range(len(middle_train)):
-            output.append((middle_train[x]))
-        for x in range(len(tail_train)):
-            output.append(tail_train[x])
-        for x in range(len(head_train)):
-            output.append(head_train[x])
-
-    return output
 
 def get_accuracy_majorityvote(cnn, target_matrix_1d, train_windows_no_label):
     print("Calculating accuracy..")
@@ -132,17 +115,6 @@ def get_accuracy_majorityvote(cnn, target_matrix_1d, train_windows_no_label):
     acc = same / (same + not_same) * 100
 
     return acc
-
-def smaller(input):
-    smallerlist = []
-    counter = [0, 0, 0, 0, 0]
-    modes = [0, 1, 2, 3, 4]
-    for chunk in input:
-        for x in enumerate(modes):
-            if((chunk[1] == x[0]) & (counter[x[0]] <29)):
-                smallerlist.append(chunk)
-                counter[x[0]] += 1
-    return smallerlist
 
 
 def majority_vote(list):
@@ -188,45 +160,36 @@ if __name__ == '__main__':
         print("Creating training windows..")
         train_windows = data.get_dataset_for_users(users_train)
         valid_windows = data.get_dataset_for_users(users_valid)
-        train_windows_int = target_label_to_number.labelstring_to_labelnumber(
-            train_windows)
+        train_windows_no_label = torch.Tensor(
+            [window[0] for window in train_windows])
         valid_windows_no_label = torch.Tensor(
             [window[0] for window in valid_windows])
+        target_matrix_1d = \
+            target_label_to_number.get_target_matrix_1d(
+            train_windows)
         valid_target_matrix_1d = \
             target_label_to_number.get_target_matrix_1d(
                 valid_windows)
-
         cnn = ConvolutionalNeuralNetwork()
         # if os.path.isfile("cnn.pt"):
         #    cnn = torch.load("cnn.pt")
         cnn.cuda()
         optimizer = optim.Adam(cnn.parameters(), lr=0.0005)
         loss_func = nn.CrossEntropyLoss()
-        meanloss = 1
         for epoch in range(EPOCH):
-            print("Training in progress(Epoch: ", EPOCH)
-            meanloss = 0
-            iteration = 0
-            train_windows_int_shuffle = shuffle2(train_windows_int)
-            train_windows_int_shuffle_29 = smaller(train_windows_int_shuffle)
-            train_windows_int_shuffle_29 = shuffle2(train_windows_int_shuffle_29)
-            train_windows_int_shuffle_29 = torch.Tensor(
-                                                    [window[0] for window in train_windows_int_shuffle_29])
-            train_windows_int_shuffle_29 = train_windows_int_shuffle_29.cuda()
-            #shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
-            #train_windows_no_label = shufflearray[0]
-            #target_matrix_1d = shufflearray[1]
-
-            for data, label in enumerate(train_windows_int_shuffle_29):
-                output = cnn(data)
+            print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
+            shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
+            train_windows_no_label = shufflearray[0]
+            target_matrix_1d = shufflearray[1]
+            for step, input in enumerate(train_windows_no_label):
+                input = input.cuda()
+                target_matrix_1d = target_matrix_1d.cuda()
+                output = cnn(input.unsqueeze(0))
                 loss = loss_func(output[0].unsqueeze(0),
-                                 label.unsqueeze(0))
-                meanloss = meanloss + abs(loss)
-                iteration += 1
+                                 target_matrix_1d[step].unsqueeze(0))
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-            meanloss = meanloss / iteration
         #file_name_network = "cnn."
         #file_name_network = file_name_network.__add__(current_user)
         #file_name_network = file_name_network.__add__(".pt")
