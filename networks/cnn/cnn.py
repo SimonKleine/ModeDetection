@@ -218,7 +218,7 @@ if __name__ == '__main__':
             #target_matrix_1d = shufflearray[1]
 
             for data, label in enumerate(train_windows_int_shuffle_29):
-                output = cnn(data.unsqueeze(0))
+                output = cnn(data)
                 loss = loss_func(output[0].unsqueeze(0),
                                  label.unsqueeze(0))
                 meanloss = meanloss + abs(loss)
