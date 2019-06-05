@@ -1,4 +1,5 @@
 # author Simon Kleine
+from typing import List, Any
 
 import torch
 
@@ -56,3 +57,18 @@ def get_target_matrix(accelerometer_dataset):
 def get_target_matrix_1d(accelerometer_dataset):
     target_matrix_1d = target_label_to_number(accelerometer_dataset).long()
     return target_matrix_1d
+
+def labelstring_to_labelnumber(accelerometer_dataset):
+    mode_list = ["bike", "car", "walk", "bus", "train"]
+    worklist = list(accelerometer_dataset)
+    newlist = []
+    for x in worklist:
+        for number, mode in enumerate(mode_list):
+            if (x[1] == mode):
+                x = list(x)
+                x[1] = number
+                x = tuple(x)
+                newlist.append(x)
+    return  newlist
+
+
