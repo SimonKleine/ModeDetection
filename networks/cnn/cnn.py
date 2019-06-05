@@ -210,7 +210,7 @@ if __name__ == '__main__':
             train_windows_int_shuffle = shuffle2(train_windows_int)
             train_windows_int_shuffle_29 = smaller(train_windows_int_shuffle)
             train_windows_int_shuffle_29 = shuffle2(train_windows_int_shuffle_29)
-            train_windows_int_shuffle_29 = torch.Tensor(train_windows_int_shuffle_29)
+            train_windows_int_shuffle_29 = torch.tensor(train_windows_int_shuffle_29)
             train_windows_int_shuffle_29 = train_windows_int_shuffle_29.cuda()
             #shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
             #train_windows_no_label = shufflearray[0]
