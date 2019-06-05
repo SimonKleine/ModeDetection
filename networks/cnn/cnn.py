@@ -178,7 +178,7 @@ if __name__ == '__main__':
         loss_func = nn.CrossEntropyLoss()
         EPOCH = 1
         meanloss = 1
-        while((meanloss > 0.1) & (EPOCH <= 500)):
+        while((meanloss > 0.15) & (EPOCH <= 500)):
             print("Training in progress(Epoch: ", EPOCH)
             EPOCH = EPOCH + 1
             shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
