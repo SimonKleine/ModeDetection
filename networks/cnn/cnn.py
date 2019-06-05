@@ -216,7 +216,6 @@ if __name__ == '__main__':
             #target_matrix_1d = shufflearray[1]
 
             for data, label in enumerate(train_windows_int_shuffle_29):
-                data = data.cuda()
                 output = cnn(data.unsqueeze(0))
                 loss = loss_func(output[0].unsqueeze(0),
                                  label.unsqueeze(0))
