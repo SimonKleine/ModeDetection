@@ -133,12 +133,7 @@ def majority_vote(list):
 
 
 if __name__ == '__main__':
-    random.seed(0)
-    torch.manual_seed(0)
-    np.random.seed(0)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    EPOCH = 1
+    EPOCH = 50
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
@@ -176,29 +171,20 @@ if __name__ == '__main__':
         cnn.cuda()
         optimizer = optim.Adam(cnn.parameters(), lr=0.0005)
         loss_func = nn.CrossEntropyLoss()
-        EPOCH = 1
-        meanloss = 1
-        while((meanloss > 0.15) & (EPOCH <= 500)):
-            print("Training in progress(Epoch: ", EPOCH)
-            EPOCH = EPOCH + 1
+        for epoch in range(EPOCH):
+            print("Training in progress(Epoch:", epoch + 1, "/", EPOCH, ")..")
             shufflearray = shuffle(train_windows_no_label, target_matrix_1d)
             train_windows_no_label = shufflearray[0]
             target_matrix_1d = shufflearray[1]
-            meanloss = 0
-            iteration = 0
             for step, input in enumerate(train_windows_no_label):
                 input = input.cuda()
                 target_matrix_1d = target_matrix_1d.cuda()
                 output = cnn(input.unsqueeze(0))
                 loss = loss_func(output[0].unsqueeze(0),
                                  target_matrix_1d[step].unsqueeze(0))
-                meanloss = meanloss + abs(loss)
-                iteration = step + 1
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-            meanloss = meanloss / iteration
-            print(meanloss)
         #file_name_network = "cnn."
         #file_name_network = file_name_network.__add__(current_user)
         #file_name_network = file_name_network.__add__(".pt")
