@@ -72,7 +72,7 @@ if __name__ == '__main__':
     np.random.seed(0)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-    EPOCH = 50
+    EPOCH = 10
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
