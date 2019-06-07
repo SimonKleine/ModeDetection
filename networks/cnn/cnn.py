@@ -10,6 +10,7 @@ from argparse import ArgumentParser
 #import networks.simplecnn as simplecnn
 import target_label_to_number
 import random
+import time
 
 
 class ConvolutionalNeuralNetwork (nn.Module):
@@ -72,18 +73,18 @@ if __name__ == '__main__':
     np.random.seed(0)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-    EPOCH = 500
+    EPOCH = 1
     overall_accuracy_list = []
     argparser = ArgumentParser()
     argparser.add_argument('training_data_file_path')
     args = argparser.parse_args()
-
+    start_time = time.time()
     print("Loading Dataset...")
     data = dataset.AccelerometerDatasetLoader(
         args.training_data_file_path, perform_interpolation=True)
 
     users = data.users
-    logfile = open("logfilecnn_epoch=500.txt", "w")
+    logfile = open("logfilecnn_epoch=1.txt", "w")
     for current_user in users:
         users_train = users.copy()
         users_train.remove(current_user)
@@ -144,6 +145,7 @@ if __name__ == '__main__':
     final_string = "Average Accuracy"
     final_string = final_string.__add__(str(overall_accuracy))
     logfile.write(final_string)
+    print('elapsed time: ',(time.time()-start_time)) 
 
 
 
