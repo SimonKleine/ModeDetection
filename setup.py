@@ -12,7 +12,7 @@ setup(
     author_email='',
     description='',
     install_requires=[
-        'numpy==1.15.4',
+        'numpy==1.22.0',
         'torch==1.0.0',
         'torchvision==0.2.1',
         'more-itertools==5.0.0',
